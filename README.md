@@ -2,7 +2,7 @@
 
 A public, read-only catalog and content-addressed file host for zero-knowledge-proof circuit artifacts (Longfellow today; Vega/BBS anticipated). It answers exactly two questions: what circuits exist, and give me the bytes of one, verifiably.
 
-Full design: [`circuit-distribution-service-spec.md`](https://github.com/sirosfoundation/go-zk-circuits/blob/main/docs/circuit-distribution-service-spec.md) *(not yet committed to this repo — currently living at `~/.claude/plans/circuit-distribution-service-spec.md`)*.
+Full design: [`docs/circuit-distribution-service-spec.md`](docs/circuit-distribution-service-spec.md).
 
 ## Two hostnames
 

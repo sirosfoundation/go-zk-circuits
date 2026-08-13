@@ -1,0 +1,51 @@
+# See https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
+# Two Fly apps, two triggers, two app-scoped deploy tokens (a compromised
+# test token cannot touch production):
+#   push to main            -> zk-circuits-test (zk-circuits-test.fly.dev)
+#   tag matching v*-release.* -> zk-circuits (api.circuits.siros.org)
+
+name: Fly Deploy
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*-release.*'
+
+concurrency:
+  group: fly-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-test:
+    name: Deploy to test host
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: test
+      url: https://zk-circuits-test.fly.dev
+    steps:
+      - uses: actions/checkout@v7
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only --config fly.test.toml --app zk-circuits-test
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_TEST }}
+
+  deploy-production:
+    name: Deploy to production host
+    # The workflow-level tag glob above already restricts which tag pushes
+    # trigger this at all; this condition just distinguishes "a tag push
+    # got this far" from "a branch push got this far" (spec: tags matching
+    # v<semver>-release.N, e.g. v1.2.3-release.1).
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://api.circuits.siros.org
+    steps:
+      - uses: actions/checkout@v7
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only --config fly.toml --app zk-circuits
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_PROD }}

@@ -1,0 +1,31 @@
+# Test-host config — deployed automatically on every push to main (see
+# .github/workflows/fly-deploy.yml). Same shape as fly.toml (production),
+# deliberately kept in parity rather than scaled down, so testing here is
+# representative of the production app's actual behavior. Only the app
+# identity and base URL differ.
+
+app = "zk-circuits-test"
+primary_region = "arn"
+
+[build]
+
+[env]
+  ZKC_BASE_URL = "https://zk-circuits-test.fly.dev"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/healthz"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

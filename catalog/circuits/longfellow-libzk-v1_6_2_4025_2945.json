@@ -1,0 +1,41 @@
+{
+  "id": "longfellow-libzk-v1_6_2_4025_2945",
+  "system": "longfellow",
+  "systemVersion": "6",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL",
+    "eu.europa.ec.eudi.pid.1"
+  ],
+  "published": true,
+  "status": "active",
+  "params": {
+    "block_enc_hash": 4025,
+    "block_enc_sig": 2945,
+    "circuit_hash": "b4bb6f01b7043f4f51d8302a30b36e3d4d2d0efc3c24557ab9212ad524a9764e",
+    "num_attributes": 2,
+    "upstream_filename": "6_2_4025_2945_b4bb6f01b7043f4f51d8302a30b36e3d4d2d0efc3c24557ab9212ad524a9764e",
+    "version": 6
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/0185b762cffb3f50fa587f9be30cd93e7db0cd27be3e85d5688c1733ac7be6b9",
+    "hash": "sha256:0185b762cffb3f50fa587f9be30cd93e7db0cd27be3e85d5688c1733ac7be6b9",
+    "size": 308557,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:906d6b6be716d74c5f75154b72b921a8de2df05cea4d9e5eba60c2fe1f7d9304",
+      "size": 92655842
+    }
+  },
+  "source": {
+    "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_2_4025_2945_b4bb6f01b7043f4f51d8302a30b36e3d4d2d0efc3c24557ab9212ad524a9764e",
+    "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
+    "originPath": "multipaz-longfellow/src/commonMain/circuits/6_2_4025_2945_b4bb6f01b7043f4f51d8302a30b36e3d4d2d0efc3c24557ab9212ad524a9764e",
+    "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
+    "license": "Apache-2.0",
+    "openSource": true,
+    "addedBy": "leifj@siros.org"
+  },
+  "publishedAt": "2026-08-13T14:23:52Z",
+  "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
+}

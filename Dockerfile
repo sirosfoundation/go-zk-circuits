@@ -19,7 +19,7 @@ COPY . .
 
 ARG VERSION=dev
 
-RUN go install github.com/swaggo/swag/cmd/swag@v1.16.6 \
+RUN go install github.com/swaggo/swag/cmd/swag \
     && swag init -g cmd/zkc/main.go --output docs/swagger
 
 RUN CGO_ENABLED=0 GOOS=linux go build \
@@ -36,6 +36,11 @@ WORKDIR /app
 
 COPY --from=builder /app/zkc /app/zkc
 COPY --from=builder /app/circuitctl /app/circuitctl
+
+# Explicit even though the "nonroot" base image tag already defaults to
+# this (confirmed: docker inspect reports Config.User "65532") — static
+# analysis of this file can't see that, only the FROM line's text.
+USER nonroot:nonroot
 
 EXPOSE 8080
 

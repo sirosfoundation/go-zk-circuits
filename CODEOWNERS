@@ -1,0 +1,4 @@
+# The bytes are the trust boundary (spec §5.4): a PR touching published
+# circuit data always needs a human review, not just green CI.
+/artifacts/ @sirosfoundation/developers
+/catalog/   @sirosfoundation/developers

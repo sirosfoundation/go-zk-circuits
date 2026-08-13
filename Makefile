@@ -53,8 +53,8 @@ swagger: install-swag ## Generate OpenAPI/Swagger documentation
 	@echo "View at: http://localhost:8080/swagger/index.html (when server is running)"
 
 .PHONY: install-swag
-install-swag: ## Install swag tool for generating Swagger docs
-	@which swag > /dev/null || (echo "Installing swag..." && go install github.com/swaggo/swag/cmd/swag@latest)
+install-swag: ## Install swag tool for generating Swagger docs (pinned via go.mod's tool directive)
+	@which swag > /dev/null || (echo "Installing swag..." && go install github.com/swaggo/swag/cmd/swag)
 
 .PHONY: clean
 clean: ## remove temporary files
@@ -100,10 +100,11 @@ coverage: ## Generate and display coverage report
 	go tool cover -func=cover.out
 
 .PHONY: tools
-tools: ## Install development tools
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	go install github.com/securego/gosec/v2/cmd/gosec@latest
-	go install honnef.co/go/tools/cmd/staticcheck@latest
+tools: ## Install development tools (all pinned via go.mod's tool directive, not @latest)
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint
+	go install github.com/securego/gosec/v2/cmd/gosec
+	go install honnef.co/go/tools/cmd/staticcheck
+	go install golang.org/x/vuln/cmd/govulncheck
 
 .PHONY: quick
 quick: fmt vet ## Quick checks (fmt + vet) before commit

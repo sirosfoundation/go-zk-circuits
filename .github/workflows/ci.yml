@@ -59,7 +59,7 @@ jobs:
           cache: true
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v9
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
         with:
           args: --timeout=5m --tests=false
 
@@ -69,10 +69,15 @@ jobs:
       # available (spec Appendix C). Closing that gap here rather than
       # inheriting it, since gosec in particular is the security-relevant
       # check for a service that parses untrusted input over HTTP.
+      #
+      # No @latest / @version here — both are `tool` dependencies in
+      # go.mod (added via `go get -tool`), so the version actually
+      # installed is pinned and verified through go.sum like any other
+      # dependency, not re-resolved fresh on every CI run.
       - name: Install gosec and staticcheck
         run: |
-          go install github.com/securego/gosec/v2/cmd/gosec@latest
-          go install honnef.co/go/tools/cmd/staticcheck@latest
+          go install github.com/securego/gosec/v2/cmd/gosec
+          go install honnef.co/go/tools/cmd/staticcheck
 
       - name: gosec
         run: gosec -exclude=G107 -tests ./...
@@ -89,7 +94,7 @@ jobs:
         with:
           go-version-file: 'go.mod'
           cache: true
-      - run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - run: go install golang.org/x/vuln/cmd/govulncheck # pinned via go.mod's tool directive, not @latest
       - run: govulncheck ./...
 
   docker-build:

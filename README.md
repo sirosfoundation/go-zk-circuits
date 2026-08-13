@@ -2,7 +2,7 @@
 
 A public, read-only catalog and content-addressed file host for zero-knowledge-proof circuit artifacts (Longfellow today; Vega/BBS anticipated). It answers exactly two questions: what circuits exist, and give me the bytes of one, verifiably.
 
-Full design: [`docs/circuit-distribution-service-spec.md`](docs/circuit-distribution-service-spec.md).
+API reference: see `docs/swagger/` (generated from code via `make swagger`) or the live `/swagger/index.html` on a running instance.
 
 ## Two hostnames
 
@@ -29,23 +29,66 @@ make lint            # golangci-lint + gosec + staticcheck
 
 ## Publishing a circuit
 
-There is no upload API — publishing goes through `circuitctl` and a normal git PR (see spec §5). `catalog/manifest.json` is a **generated build product**; `circuitctl verify` (run in CI) rejects any hand-edit or drift from `catalog/circuits/*.json`.
+There is no upload API. Publishing means: fork this repo, add the entry locally with `circuitctl`, and open a pull request — the same path for a first-time contributor as for a maintainer. `catalog/manifest.json` is a **generated build product**, never hand-edited; `circuitctl verify` (enforced in CI, see below) rejects any hand-edit or drift from `catalog/circuits/*.json`.
+
+### 1. Fork and clone
 
 ```sh
-circuitctl add <file> \
+gh repo fork sirosfoundation/go-zk-circuits --clone
+cd go-zk-circuits
+```
+
+### 2. Build `circuitctl`
+
+There's no separate distribution for it — it's built from this same repo, alongside the service itself:
+
+```sh
+go build -o circuitctl ./cmd/circuitctl
+# or: make build   (also builds ./zkc, the service binary — not needed just to publish)
+```
+
+### 3. Add your circuit
+
+```sh
+./circuitctl add <file> \
   --system longfellow \
   --origin <url> --added-by <you> \
   [--toolchain "<what built these bytes>"] \
   [--license <spdx>] [--open-source] \
   [--unpublished]   # keep it in the repo, hash-verified, but out of the served manifest
+```
 
-circuitctl verify              # CI gate: hashes, schema, orphans, manifest freshness
-circuitctl ls [--stale]        # human-readable table
+This writes `catalog/circuits/<id>.json`, copies the artifact into `artifacts/sha256/<hash>`, and regenerates `catalog/manifest.json` for you — commit all three.
+
+`published`, `openSource`, and `toolchain` all default to the fail-closed value (`false`/empty) unless explicitly asserted — see spec §2.4.1/§2.8.1 for why. An entry with `published: false` stays fully in the repo and fully integrity-checked; it is simply never included in the manifest the service actually serves, and its artifact bytes are unreachable at `/v1/artifacts/*` even though they're compiled into the binary.
+
+### 4. Verify locally before pushing
+
+```sh
+./circuitctl verify              # the same gate CI runs: hashes, schema, orphans, manifest freshness
+./circuitctl ls [--stale]        # human-readable table of the whole catalog
+```
+
+### 5. Open a pull request
+
+```sh
+git checkout -b add-<your-circuit-id>
+git add catalog/ artifacts/
+git commit -m "Add <your-circuit-id>"
+git push -u origin add-<your-circuit-id>
+gh pr create --repo sirosfoundation/go-zk-circuits
+```
+
+`main` is protected: your PR must pass CI (build/test, `circuitctl verify`, lint, `govulncheck`, a Docker build) **and** get one approving review from a `CODEOWNERS`-designated reviewer, since any PR touching `artifacts/` or `catalog/` always does (spec §5.4 — the bytes are the trust boundary). Once merged, it ships to the test environment automatically; a maintainer promotes it to production separately.
+
+### Other lifecycle commands
+
+```sh
 circuitctl deprecate/revoke <id> --reason <text>
 circuitctl publish/unpublish <id> [--reason <text>]
 ```
 
-`published`, `openSource`, and `toolchain` all default to the fail-closed value (`false` / empty) unless explicitly asserted — see spec §2.4.1/§2.8.1 for why. An entry with `published: false` stays fully in the repo and fully integrity-checked; it is simply never included in the manifest the service actually serves, and its artifact bytes are unreachable at `/v1/artifacts/*` even though they're compiled into the binary.
+Same flow as above: run locally, commit the result, open a PR.
 
 ## Layout
 

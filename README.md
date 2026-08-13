@@ -31,6 +31,15 @@ git push origin v1.2.3-release.1
 
 `api.circuits.siros.org`'s TLS cert is provisioned (`fly certs add`) but pending DNS — see `fly.toml`'s header comment for the exact records, or `fly certs show api.circuits.siros.org --app zk-circuits`.
 
+**In the meantime, any other Fly app in the `sirosfoundation` org can reach both apps over the private 6PN network** (no DNS needed at all — internal names are Fly's own, not tied to the public domain):
+
+```
+http://zk-circuits.internal:8080       # production
+http://zk-circuits-test.internal:8080  # test
+```
+
+Verified working (via `fly console --image alpine:latest -a <other-app> -C "wget -O- http://zk-circuits.internal:8080/healthz"`). Note: running this *from inside the same app* you're targeting can resolve to itself rather than the real service, since Fly's `.internal` DNS round-robins across every machine currently in that app — including a throwaway debug console machine you just added to it. Test cross-app to avoid that.
+
 ## Quick start
 
 ```sh

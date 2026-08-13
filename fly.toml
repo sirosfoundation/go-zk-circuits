@@ -14,6 +14,9 @@
 # (fly.test.toml, app zk-circuits-test) deploys on every push to main
 # instead. The human-facing site lives at circuits.siros.org, in a
 # separate repo (spec §1.6) — it is not this app.
+#
+# Meanwhile, other Fly apps in this org can already reach this over 6PN at
+# http://zk-circuits.internal:8080, no DNS required (README.md "Deployment").
 
 app = "zk-circuits"
 primary_region = "arn"

@@ -1,0 +1,36 @@
+# Standalone Fly app config — NOT orchestrated through sirosid-dev's
+# fly-up/fly-down tooling (circuit-distribution-service-spec.md Appendix C:
+# every standalone Go service in this org, go-trust/go-wallet-backend/
+# go-tokenauth/go-grc, ships its own fly.toml; sirosid-dev's orchestration is
+# specifically for spinning up full demo/test-environment stacks).
+#
+# Custom domain: api.circuits.siros.org (spec §9.1, resolved 2026-08-13).
+# The `app` name below is the internal Fly identifier, not the hostname —
+# attach the real domain after first deploy with:
+#   fly certs add api.circuits.siros.org
+# and point its DNS CNAME at this app. The human-facing site lives at
+# circuits.siros.org instead, in a separate repo (spec §1.6) — it is not
+# this app and does not deploy through this fly.toml.
+
+app = "zk-circuits"
+primary_region = "arn"
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"   # spec §4.6: a cold start mid-presentation is exactly the latency this service must avoid
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/healthz"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

@@ -1,0 +1,505 @@
+{
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Public, read-only catalog and content-addressed file host for\nzero-knowledge-proof circuit artifacts and their metadata.\nSee circuit-distribution-service-spec.md for the full contract.\n\nEvery endpoint here MUST be implementable by a dumb static\nfile server (spec §3.1) — the hosting decision stays reversible.",
+        "title": "go-zk-circuits API",
+        "termsOfService": "https://github.com/sirosfoundation/go-zk-circuits",
+        "contact": {
+            "name": "sirosfoundation",
+            "url": "https://github.com/sirosfoundation/go-zk-circuits"
+        },
+        "license": {
+            "name": "BSD-2-Clause",
+            "url": "https://opensource.org/licenses/BSD-2-Clause"
+        },
+        "version": "0.1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/healthz": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Liveness check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.HealthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/info": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Info"
+                ],
+                "summary": "Build and catalog info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.InfoResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/readyz": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Readiness check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.ReadinessResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/api.ReadinessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/artifacts/{alg}/{hex}": {
+            "get": {
+                "produces": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "Artifacts"
+                ],
+                "summary": "Content-addressed artifact download",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "hash algorithm, currently only sha256",
+                        "name": "alg",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "lowercase hex digest, 64 chars for sha256",
+                        "name": "hex",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "206": {
+                        "description": "Partial Content"
+                    },
+                    "304": {
+                        "description": "Not Modified"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api.Problem"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/api.Problem"
+                        }
+                    },
+                    "416": {
+                        "description": "Requested Range Not Satisfiable",
+                        "schema": {
+                            "$ref": "#/definitions/api.Problem"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/circuits": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Circuits"
+                ],
+                "summary": "Filtered circuit listing (optional convenience endpoint)",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "exact match on system",
+                        "name": "system",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "exact match on systemVersion",
+                        "name": "version",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "exact match on params.num_attributes",
+                        "name": "numAttributes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "membership in docTypes",
+                        "name": "docType",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "exact match on status; default active; status=all returns everything",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/catalog.Manifest"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/circuits/{id}.json": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Circuits"
+                ],
+                "summary": "Single circuit descriptor",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "circuit id or alias",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/catalog.CircuitDescriptor"
+                        }
+                    },
+                    "301": {
+                        "description": "Moved Permanently"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/api.Problem"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/api.Problem"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/manifest.json": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Manifest"
+                ],
+                "summary": "Full circuit catalog manifest",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/catalog.Manifest"
+                        }
+                    },
+                    "304": {
+                        "description": "Not Modified"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.HealthResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.InfoResponse": {
+            "type": "object",
+            "properties": {
+                "catalog": {
+                    "type": "string"
+                },
+                "circuitCount": {
+                    "type": "integer"
+                },
+                "generatedAt": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.Problem": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "type": "string"
+                },
+                "instance": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.ReadinessResponse": {
+            "type": "object",
+            "properties": {
+                "catalogLoaded": {
+                    "type": "boolean"
+                },
+                "circuitCount": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "catalog.Artifact": {
+            "type": "object",
+            "properties": {
+                "compression": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string"
+                },
+                "mediaType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "uncompressed": {
+                    "$ref": "#/definitions/catalog.Uncompressed"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "catalog.CircuitDescriptor": {
+            "type": "object",
+            "properties": {
+                "aliases": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "artifact": {
+                    "$ref": "#/definitions/catalog.Artifact"
+                },
+                "deprecatedAt": {
+                    "type": "string"
+                },
+                "docTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "id": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "params": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "published": {
+                    "type": "boolean"
+                },
+                "publishedAt": {
+                    "type": "string"
+                },
+                "source": {
+                    "$ref": "#/definitions/catalog.Source"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "system": {
+                    "type": "string"
+                },
+                "systemVersion": {
+                    "type": "string"
+                }
+            }
+        },
+        "catalog.Manifest": {
+            "type": "object",
+            "properties": {
+                "catalog": {
+                    "type": "string"
+                },
+                "circuits": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/catalog.CircuitDescriptor"
+                    }
+                },
+                "generatedAt": {
+                    "type": "string"
+                },
+                "manifestVersion": {
+                    "type": "integer"
+                },
+                "next": {
+                    "type": "string"
+                }
+            }
+        },
+        "catalog.Source": {
+            "type": "object",
+            "properties": {
+                "addedBy": {
+                    "type": "string"
+                },
+                "license": {
+                    "type": "string"
+                },
+                "origin": {
+                    "type": "string"
+                },
+                "originPath": {
+                    "type": "string"
+                },
+                "originRef": {
+                    "type": "string"
+                },
+                "verifiedBy": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/catalog.VerificationRecord"
+                    }
+                }
+            }
+        },
+        "catalog.Uncompressed": {
+            "type": "object",
+            "properties": {
+                "hash": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
+        },
+        "catalog.VerificationRecord": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "result": {
+                    "type": "string"
+                },
+                "tool": {
+                    "type": "string"
+                },
+                "toolVersion": {
+                    "type": "string"
+                },
+                "verifierIdentity": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "description": "The full circuit catalog",
+            "name": "Manifest"
+        },
+        {
+            "description": "Single-entry lookup and optional filtered listing",
+            "name": "Circuits"
+        },
+        {
+            "description": "Content-addressed circuit artifact downloads",
+            "name": "Artifacts"
+        },
+        {
+            "description": "Liveness and readiness probes",
+            "name": "Health"
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "longfellow-libzk-v1_8_2_4307_2945",
+  "aliases": [
+    "longfellow-8-2"
+  ],
+  "system": "longfellow",
+  "systemVersion": "8",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL",
+    "eu.europa.ec.eudi.pid.1"
+  ],
+  "published": false,
+  "status": "active",
+  "params": {
+    "block_enc_hash": 4307,
+    "block_enc_sig": 2945,
+    "circuit_hash": "bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5",
+    "num_attributes": 2,
+    "upstream_filename": "8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5",
+    "version": 8
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/75840eebd3c63ba44f47be333bcbc93503d67c034600517df2f84312c8d4e79b",
+    "hash": "sha256:75840eebd3c63ba44f47be333bcbc93503d67c034600517df2f84312c8d4e79b",
+    "size": 326208,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:aca1601b56201eef6fce7122ffba78aa1d843956d4d6e486eb1f6c9624217697",
+      "size": 108970674
+    }
+  },
+  "source": {
+    "origin": "local copy from balfanz/multipaz (private fork, branch ppid), path multipaz-longfellow/src/commonMain/circuits/ -- PROVENANCE UNRESOLVED, see spec Appendix C and notes below",
+    "toolchain": "NOT CONFIRMED - believed to originate from the zk-cred-longfellow / libzk Rust toolchain (per parent plan), but the exact compiler version and build command used to produce THESE specific bytes have not been verified against the private fork's build system",
+    "openSource": false,
+    "addedBy": "leifj@siros.org"
+  },
+  "publishedAt": "2026-08-13T11:32:59Z",
+  "notes": "UNRESOLVED PROVENANCE (2026-08-13): bytes sourced from a flat, unversioned local copy of the private balfanz/multipaz fork (branch ppid), not from the license-cleared public zk-cred-longfellow PR #222 that spec section 9.6's licensing resolution was based on. Do NOT treat this entry as cleared for redistribution. Before this entry ships to any real client: confirm with whoever has visibility into the private fork (Dirk Balfanz per the parent plan) whether these bytes are redistributable and under what terms, then update source.license/source.origin honestly, or replace with bytes pulled from PR 222 once merged. This is a Phase 1 dev/testing entry, not a cleared publish. | unpublish: provenance unresolved: bytes sourced from the private balfanz/multipaz fork (branch ppid), not the license-cleared public zk-cred-longfellow PR #222 the spec's licensing resolution (§9.6) assumed. See the entry's existing notes field and spec Appendix C for full detail. Unpublish until confirmed redistributable."
+}

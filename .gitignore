@@ -1,0 +1,31 @@
+# Binaries for programs and plugins (root-anchored: cmd/zkc/ and
+# cmd/circuitctl/ are source directories with the same names and must
+# NOT be excluded — an unanchored pattern here previously matched them too)
+/zkc
+/circuitctl
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage*.*
+cover.out
+
+# IDE and editor files
+.vscode/.history/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+*.tmp

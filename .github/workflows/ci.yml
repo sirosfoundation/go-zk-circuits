@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -v -race -timeout 10m -coverprofile=coverage.txt -covermode=atomic ./...
+
+  circuitctl-verify:
+    name: circuitctl verify (catalog integrity gate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      # This is the CI gate that makes hand-editing catalog/manifest.json,
+      # swapping an artifact's bytes under an existing id, or leaving an
+      # orphaned artifact file impossible to merge (spec §5.3, §5.4).
+      - name: circuitctl verify
+        run: go run ./cmd/circuitctl verify
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          args: --timeout=5m --tests=false
+
+      # Deliberately explicit: go-trust's Makefile chains golangci-lint +
+      # gosec + staticcheck, but its own CI workflow only runs
+      # golangci-lint, leaving the other two unenforced despite being
+      # available (spec Appendix C). Closing that gap here rather than
+      # inheriting it, since gosec in particular is the security-relevant
+      # check for a service that parses untrusted input over HTTP.
+      - name: Install gosec and staticcheck
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@latest
+          go install honnef.co/go/tools/cmd/staticcheck@latest
+
+      - name: gosec
+        run: gosec -exclude=G107 -tests ./...
+
+      - name: staticcheck
+        run: staticcheck ./...
+
+  govulncheck:
+    name: govulncheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+      - run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - run: govulncheck ./...
+
+  docker-build:
+    name: Docker build (no push)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build image
+        run: docker build --build-arg VERSION=${{ github.sha }} -t go-zk-circuits:ci .

@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-08-14T20:07:40Z",
+  "generatedAt": "2026-08-14T20:11:13Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -364,15 +364,14 @@
         }
       },
       "source": {
-        "origin": "Private balfanz/multipaz fork (branch ppid) — no public repository URL exists for these bytes. Distribution via this catalog approved by Dirk Balfanz (fork owner), 2026-08-14.",
-        "originRef": "branch ppid (unversioned local copy — no commit SHA recorded)",
+        "origin": "Private balfanz/multipaz fork (branch ppid); no public repository URL exists for these bytes.",
         "originPath": "multipaz-longfellow/src/commonMain/circuits/8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5",
         "toolchain": "NOT CONFIRMED - believed to originate from the zk-cred-longfellow / libzk Rust toolchain (per parent plan), but the exact compiler version and build command used to produce THESE specific bytes have not been verified against the private fork's build system",
         "openSource": false,
         "addedBy": "leifj@siros.org"
       },
       "publishedAt": "2026-08-13T11:32:59Z",
-      "notes": "Distribution via this catalog approved by Dirk Balfanz (rights holder for the private balfanz/multipaz fork these bytes come from), 2026-08-14. Bytes are still sourced from a private, unversioned fork copy — no public repository URL exists, and the exact toolchain/build command for these specific bytes have not been independently verified. License terms beyond this distribution approval have not been separately confirmed: do not infer an open-source license from this entry's presence in the catalog. | publish: Approved for catalog distribution by Dirk Balfanz (private fork rights holder), 2026-08-14"
+      "notes": "Publication authorized via the go-zk-circuits PR/commit that set published=true on this entry — see this file's git history for the authorization record, rather than restating it here. No commit SHA exists for these bytes independently of this catalog: they are sourced from a private, unversioned fork copy with no public repository URL. License terms have not been separately confirmed: do not infer an open-source license from this entry's presence in the catalog."
     }
   ],
   "next": null

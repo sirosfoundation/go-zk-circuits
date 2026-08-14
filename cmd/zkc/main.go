@@ -116,6 +116,9 @@ func main() {
 		Addr:              listen,
 		Handler:           r,
 		ReadHeaderTimeout: 10 * time.Second, // guards against a Slowloris-style slow-header attack
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      60 * time.Second, // largest artifact download must still fit comfortably
+		IdleTimeout:       120 * time.Second,
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

@@ -10,8 +10,30 @@ on:
     types: [published]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
+  # contents: write is only actually used by the reusable workflow's
+  # "Attach SBOM to Release" step (startsWith(github.ref, 'refs/tags/')),
+  # and id-token: write only by Cosign signing (sign-sbom is false here) —
+  # neither applies to a push-to-main or pull_request run, so those get the
+  # minimal permission set. Flagged by Copilot review on PR #2: a
+  # pull_request-triggered job has no legitimate reason to hold a
+  # write-capable GITHUB_TOKEN just because a different trigger type
+  # sometimes needs one.
   sbom:
+    if: ${{ !startsWith(github.ref, 'refs/tags/') && github.event_name != 'release' }}
+    uses: sirosfoundation/.github/.github/workflows/sbom.yml@03160e376dbdeb9f2c904e7a9f45499b2f67e8fa # main
+    with:
+      artifact-name: go-zk-circuits
+      scan-vulnerabilities: true
+      sign-sbom: false
+    permissions:
+      security-events: write
+
+  sbom-release:
+    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'release' }}
     uses: sirosfoundation/.github/.github/workflows/sbom.yml@03160e376dbdeb9f2c904e7a9f45499b2f67e8fa # main
     with:
       artifact-name: go-zk-circuits
@@ -19,5 +41,4 @@ jobs:
       sign-sbom: false
     permissions:
       contents: write
-      id-token: write
       security-events: write

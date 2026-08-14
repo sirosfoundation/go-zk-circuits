@@ -1,0 +1,34 @@
+version: "2"
+
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - unused
+    - misspell
+    - unconvert
+    - errorlint
+  settings:
+    misspell:
+      locale: US
+    errorlint:
+      errorf: true
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - errcheck
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/sirosfoundation/go-zk-circuits

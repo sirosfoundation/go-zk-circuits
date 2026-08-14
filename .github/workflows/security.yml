@@ -1,0 +1,21 @@
+name: Security
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # govulncheck already runs as its own job in ci.yml, pinned via go.mod's
+  # tool directive rather than a hardcoded version — not duplicated here.
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

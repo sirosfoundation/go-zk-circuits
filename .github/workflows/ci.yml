@@ -13,6 +13,8 @@ jobs:
   build-and-test:
     name: Build and Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # only used by the coverage-badge step below, and only on push to main
     steps:
       - uses: actions/checkout@v7
 
@@ -25,8 +27,25 @@ jobs:
       - name: Build
         run: go build -v ./...
 
+      # -coverpkg=./... attributes coverage across package boundaries (e.g.
+      # pkg/api's tests exercising pkg/catalog's LoadManifestFile) instead of
+      # only counting a package's own test file — without it the reported
+      # total meaningfully understates real coverage.
       - name: Test
-        run: go test -v -race -timeout 10m -coverprofile=coverage.txt -covermode=atomic ./...
+        run: go test -v -race -timeout 10m -coverprofile=cover.out -covermode=atomic -coverpkg=./... ./...
+
+      # Enforces .testcoverage.yml's thresholds as a real CI gate, not just
+      # a one-time check — a PR that drops coverage below them fails here.
+      # On push to main only, also regenerates and commits the coverage
+      # badge to the "badges" branch (README's coverage badge reads from
+      # there), matching the convention used across this org's other Go
+      # repos (e.g. go-grc, go-cryptoutil).
+      - name: Check test coverage
+        uses: vladopajic/go-test-coverage@v2
+        with:
+          config: ./.testcoverage.yml
+          git-token: ${{ github.ref_name == 'main' && secrets.GITHUB_TOKEN || '' }}
+          git-branch: badges
 
   circuitctl-verify:
     name: circuitctl verify (catalog integrity gate)

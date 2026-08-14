@@ -1,5 +1,18 @@
 # go-zk-circuits
 
+<div align="center">
+
+[![CI](https://github.com/sirosfoundation/go-zk-circuits/actions/workflows/ci.yml/badge.svg)](https://github.com/sirosfoundation/go-zk-circuits/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/sirosfoundation/go-zk-circuits.svg)](https://pkg.go.dev/github.com/sirosfoundation/go-zk-circuits)
+[![Go Report Card](https://goreportcard.com/badge/github.com/sirosfoundation/go-zk-circuits)](https://goreportcard.com/report/github.com/sirosfoundation/go-zk-circuits)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=sirosfoundation_go-zk-circuits&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sirosfoundation_go-zk-circuits)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/sirosfoundation/go-zk-circuits/badge)](https://scorecard.dev/viewer/?uri=github.com/sirosfoundation/go-zk-circuits)
+![coverage](https://raw.githubusercontent.com/sirosfoundation/go-zk-circuits/badges/.badges/main/coverage.svg)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/sirosfoundation/go-zk-circuits)](go.mod)
+[![License](https://img.shields.io/badge/License-BSD_2--Clause-orange.svg)](LICENSE)
+
+</div>
+
 A public, read-only catalog and content-addressed file host for zero-knowledge-proof circuit artifacts (Longfellow today; Vega/BBS anticipated). It answers exactly two questions: what circuits exist, and give me the bytes of one, verifiably.
 
 API reference: see `docs/swagger/` (generated from code via `make swagger`) or the live `/swagger/index.html` on a running instance.

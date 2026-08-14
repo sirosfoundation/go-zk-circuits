@@ -6,7 +6,7 @@
 # available — smaller attack surface, faster builds, no libc dependency.
 
 # Build stage
-FROM golang:1.26.5-alpine AS builder
+FROM golang:1.26.6-alpine AS builder
 
 WORKDIR /app
 

@@ -83,6 +83,27 @@ func TestReadyz_NotReadyBeforeLoad(t *testing.T) {
 	require.Equal(t, problemContentType, w2.Header().Get("Content-Type"))
 }
 
+func TestReadyz_NotReadyWhenArtifactMissingFromFS(t *testing.T) {
+	r, _, root := newTestServer(t)
+
+	// Simulate a build bug: manifest references a hash whose blob never
+	// made it into the served tree (not something LoadCatalog itself could
+	// catch, since it never opens artifact bytes).
+	entries, err := os.ReadDir(filepath.Join(root, "artifacts", "sha256"))
+	require.NoError(t, err)
+	require.NotEmpty(t, entries)
+	require.NoError(t, os.Remove(filepath.Join(root, "artifacts", "sha256", entries[0].Name())))
+
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/readyz", nil))
+	require.Equal(t, http.StatusServiceUnavailable, w.Code)
+
+	var resp ReadinessResponse
+	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &resp))
+	require.Equal(t, "not_ready", resp.Status)
+	require.Contains(t, resp.Message, entries[0].Name())
+}
+
 func TestManifest_FetchAndConditionalRevalidate(t *testing.T) {
 	r, _, _ := newTestServer(t)
 

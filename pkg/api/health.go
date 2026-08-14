@@ -2,9 +2,12 @@ package api
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/sirosfoundation/go-zk-circuits/pkg/catalog"
 )
 
 // HealthResponse is returned by GET /healthz.
@@ -52,19 +55,48 @@ func HealthHandler(serverCtx *ServerContext) gin.HandlerFunc {
 func ReadinessHandler(serverCtx *ServerContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		manifestRaw, _, byID, _, _, _, _ := serverCtx.snapshot()
-		ready := manifestRaw != nil
 		resp := ReadinessResponse{
 			Timestamp:     time.Now(),
-			CatalogLoaded: ready,
+			CatalogLoaded: manifestRaw != nil,
 			CircuitCount:  len(byID),
 		}
-		if ready {
-			resp.Status = "ready"
-			c.JSON(http.StatusOK, resp)
-		} else {
+		if manifestRaw == nil {
 			resp.Status = "not_ready"
 			resp.Message = "catalog not loaded"
 			c.JSON(http.StatusServiceUnavailable, resp)
+			return
 		}
+		if missing := firstUnreachableArtifact(serverCtx, byID); missing != "" {
+			resp.Status = "not_ready"
+			resp.Message = "artifact referenced by manifest is not reachable: " + missing
+			c.JSON(http.StatusServiceUnavailable, resp)
+			return
+		}
+		resp.Status = "ready"
+		c.JSON(http.StatusOK, resp)
 	}
+}
+
+// firstUnreachableArtifact opens (not just stats) every artifact referenced
+// by the currently loaded manifest, returning the first hash that isn't
+// actually servable. A manifest can be well-formed and fully loaded while
+// still referencing a hash whose blob never made it into the image (a build
+// bug, not a data bug) — /readyz should catch that before traffic does,
+// rather than only confirming a manifest object exists in memory.
+func firstUnreachableArtifact(serverCtx *ServerContext, byID map[string]*catalog.CircuitDescriptor) string {
+	for _, e := range byID {
+		if e.Artifact == nil {
+			continue
+		}
+		hexDigest, ok := strings.CutPrefix(e.Artifact.Hash, "sha256:")
+		if !ok {
+			continue
+		}
+		f, err := serverCtx.FS.Open("artifacts/sha256/" + hexDigest)
+		if err != nil {
+			return e.Artifact.Hash
+		}
+		_ = f.Close()
+	}
+	return ""
 }

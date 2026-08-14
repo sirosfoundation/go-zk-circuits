@@ -6,6 +6,7 @@
 package main
 
 import (
+	"fmt"
 	"io/fs"
 	"log/slog"
 	"net/http"
@@ -61,38 +62,60 @@ import (
 // Version is set at build time via -ldflags.
 var Version = "0.1.0-dev"
 
-func main() {
-	listen := envOr("ZKC_LISTEN", ":8080")
-	baseURL := os.Getenv("ZKC_BASE_URL")
-	logLevelStr := envOr("ZKC_LOG_LEVEL", "info")
-	rateLimitRPS := envInt("ZKC_RATE_LIMIT_RPS", 20)
-	rateLimitBurst := envInt("ZKC_RATE_LIMIT_BURST", 60)
-	artifactDir := os.Getenv("ZKC_ARTIFACT_DIR")
+// config is every env-var-derived setting main() needs, gathered in one
+// place so it can be constructed directly in tests without touching the
+// process environment.
+type config struct {
+	Listen         string
+	BaseURL        string
+	LogLevel       string
+	RateLimitRPS   int
+	RateLimitBurst int
+	ArtifactDir    string
+}
 
-	logger := newLogger(logLevelStr)
+func configFromEnv() config {
+	return config{
+		Listen:         envOr("ZKC_LISTEN", ":8080"),
+		BaseURL:        os.Getenv("ZKC_BASE_URL"),
+		LogLevel:       envOr("ZKC_LOG_LEVEL", "info"),
+		RateLimitRPS:   envInt("ZKC_RATE_LIMIT_RPS", 20),
+		RateLimitBurst: envInt("ZKC_RATE_LIMIT_BURST", 60),
+		ArtifactDir:    os.Getenv("ZKC_ARTIFACT_DIR"),
+	}
+}
+
+// newServer builds everything up to (but not including) accepting
+// connections or waiting on OS signals — the part that's actually
+// unit-testable, since it returns before anything blocks. cleanup stops the
+// rate limiter's background goroutine and must be called once the server
+// is done with, mirroring the close(done) that used to be main()'s own
+// deferred call.
+func newServer(cfg config, logger logging.Logger) (srv *http.Server, cleanup func(), err error) {
 	api.Version = Version
 
-	fsys, source := resolveFS(artifactDir)
+	fsys, source := resolveFS(cfg.ArtifactDir)
 	logger.Info("Data source configured", logging.F("source", source))
 
+	baseURL := cfg.BaseURL
 	if baseURL == "" {
-		baseURL = "http://" + hostOnly(listen)
+		baseURL = "http://" + hostOnly(cfg.Listen)
 	}
 
 	serverCtx := api.NewServerContext(logger, fsys, baseURL)
 	if err := serverCtx.LoadCatalog(); err != nil {
-		logger.Fatal("Failed to load catalog", logging.F("error", err.Error()))
+		return nil, nil, fmt.Errorf("load catalog: %w", err)
 	}
 
 	metrics := api.NewMetrics()
 	serverCtx.Metrics = metrics
-	serverCtx.RateLimiter = api.NewRateLimiter(rateLimitRPS, rateLimitBurst)
+	serverCtx.RateLimiter = api.NewRateLimiter(cfg.RateLimitRPS, cfg.RateLimitBurst)
 
 	done := make(chan struct{})
 	serverCtx.RateLimiter.StartCleanupLoop(time.Hour, 24*time.Hour, done)
-	defer close(done)
+	cleanup = func() { close(done) }
 
-	if logLevelStr != "debug" {
+	if cfg.LogLevel != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
@@ -109,17 +132,30 @@ func main() {
 
 	logger.Info("Starting go-zk-circuits server",
 		logging.F("version", Version),
-		logging.F("listen", listen),
+		logging.F("listen", cfg.Listen),
 		logging.F("baseURL", baseURL))
 
-	srv := &http.Server{
-		Addr:              listen,
+	srv = &http.Server{
+		Addr:              cfg.Listen,
 		Handler:           r,
 		ReadHeaderTimeout: 10 * time.Second, // guards against a Slowloris-style slow-header attack
 		ReadTimeout:       30 * time.Second,
 		WriteTimeout:      60 * time.Second, // largest artifact download must still fit comfortably
 		IdleTimeout:       120 * time.Second,
 	}
+	return srv, cleanup, nil
+}
+
+func main() {
+	cfg := configFromEnv()
+	logger := newLogger(cfg.LogLevel)
+
+	srv, cleanup, err := newServer(cfg, logger)
+	if err != nil {
+		logger.Fatal("Failed to start server", logging.F("error", err.Error()))
+	}
+	defer cleanup()
+
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			logger.Fatal("API server error", logging.F("error", err.Error()))

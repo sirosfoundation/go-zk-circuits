@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/sirosfoundation/g119612/pkg/logging"
+
 	"github.com/sirosfoundation/go-zk-circuits/pkg/catalog"
 )
 

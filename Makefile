@@ -30,7 +30,7 @@ run: check-go-version build ## Run the zkc server
 
 .PHONY: test
 test: check-go-version ## run tests with coverage and race detection
-	go test -v -race -timeout 10m -count=1 -p 4 -coverprofile=cover.out -covermode=atomic ./... && \
+	go test -v -race -timeout 10m -count=1 -p 4 -coverprofile=cover.out -covermode=atomic -coverpkg=./... ./... && \
 	go tool cover -func=cover.out | tail -n 1 | awk '{ print "Total coverage: " $$3 }'
 
 .PHONY: test-integration

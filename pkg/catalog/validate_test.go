@@ -60,31 +60,26 @@ func TestValidateArtifact_AcceptsCompressionNone(t *testing.T) {
 }
 
 func TestValidateSource_RequiresOrigin(t *testing.T) {
-	s := &Source{AddedBy: "test@example.invalid"}
+	s := &Source{}
 	require.ErrorContains(t, validateSource(s), "origin is required")
 }
 
-func TestValidateSource_RequiresAddedBy(t *testing.T) {
-	s := &Source{Origin: "https://example.invalid"}
-	require.ErrorContains(t, validateSource(s), "addedBy is required")
-}
-
 func TestValidateSource_VerifiedByRequiresAllIdentityFields(t *testing.T) {
-	s := &Source{Origin: "o", AddedBy: "a", VerifiedBy: []VerificationRecord{
+	s := &Source{Origin: "o", VerifiedBy: []VerificationRecord{
 		{Tool: "", ToolVersion: "1.0", VerifierIdentity: "v", Date: "2026-08-13T21:40:11Z", Result: ResultAccepted},
 	}}
 	require.ErrorContains(t, validateSource(s), "tool, toolVersion, and verifierIdentity")
 }
 
 func TestValidateSource_VerifiedByRequiresRFC3339Date(t *testing.T) {
-	s := &Source{Origin: "o", AddedBy: "a", VerifiedBy: []VerificationRecord{
+	s := &Source{Origin: "o", VerifiedBy: []VerificationRecord{
 		{Tool: "t", ToolVersion: "1.0", VerifierIdentity: "v", Date: "not-a-date", Result: ResultAccepted},
 	}}
 	require.ErrorContains(t, validateSource(s), "is not RFC3339")
 }
 
 func TestValidateSource_AcceptsValidVerifiedByAndRejected(t *testing.T) {
-	s := &Source{Origin: "o", AddedBy: "a", VerifiedBy: []VerificationRecord{
+	s := &Source{Origin: "o", VerifiedBy: []VerificationRecord{
 		{Tool: "t", ToolVersion: "1.0", VerifierIdentity: "v", Date: "2026-08-13T21:40:11Z", Result: ResultRejected},
 	}}
 	require.NoError(t, validateSource(s))

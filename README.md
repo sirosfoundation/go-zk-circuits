@@ -65,13 +65,15 @@ go build -o circuitctl ./cmd/circuitctl
 ```sh
 ./circuitctl add <file> \
   --system longfellow \
-  --origin <url> --added-by <you> \
+  --origin <url> \
   [--toolchain "<what built these bytes>"] \
   [--license <spdx>] [--open-source] \
   [--unpublished]   # keep it in the repo, hash-verified, but out of the served manifest
 ```
 
 This writes `catalog/circuits/<id>.json`, copies the artifact into `artifacts/sha256/<hash>`, and regenerates `catalog/manifest.json` for you — commit all three.
+
+There's deliberately no "added by" field: the git commit that adds or edits an entry is a better record than an identity string typed into JSON — it has a real author, date, and message, and it captures every later edit too, not just the original add. See `catalog/circuits/<id>.json`'s commit history on GitHub for that.
 
 `published`, `openSource`, and `toolchain` all default to the fail-closed value (`false`/empty) unless explicitly asserted — see spec §2.4.1/§2.8.1 for why. An entry with `published: false` stays fully in the repo and fully integrity-checked; it is simply never included in the manifest the service actually serves, and its artifact bytes are unreachable at `/v1/artifacts/*` even though they're compiled into the binary.
 

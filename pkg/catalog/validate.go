@@ -144,9 +144,6 @@ func validateSource(s *Source) error {
 	if s.Origin == "" {
 		return fmt.Errorf("origin is required")
 	}
-	if s.AddedBy == "" {
-		return fmt.Errorf("addedBy is required")
-	}
 	for i, v := range s.VerifiedBy {
 		if v.Tool == "" || v.ToolVersion == "" || v.VerifierIdentity == "" {
 			return fmt.Errorf("verifiedBy[%d]: tool, toolVersion, and verifierIdentity are all required", i)

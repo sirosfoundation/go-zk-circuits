@@ -33,8 +33,7 @@
   "source": {
     "origin": "Private balfanz/multipaz fork (branch ppid), path multipaz-longfellow/src/commonMain/circuits/8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5; no public repository URL exists for these bytes.",
     "license": "Apache-2.0",
-    "openSource": true,
-    "addedBy": "leifj@siros.org"
+    "openSource": true
   },
   "publishedAt": "2026-08-13T11:32:59Z",
   "notes": "Publication authorized via the go-zk-circuits PR/commit that set published=true on this entry — see this file's git history for the authorization record, rather than restating it here. No commit SHA exists for these bytes independently of this catalog: they are sourced from a private, unversioned fork copy with no public repository URL."

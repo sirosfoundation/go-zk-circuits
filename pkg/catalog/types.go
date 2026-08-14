@@ -97,12 +97,19 @@ type Uncompressed struct {
 // derived from License — it defaults to false (fail-closed, same
 // rationale as CircuitDescriptor.Published) and requires an affirmative
 // claim from whoever ran `circuitctl add --open-source`.
+//
+// There is deliberately no "addedBy" field: an identity string a human
+// typed in is worth less than the actual git commit that changed this
+// file, which a reader can inspect directly for the real author, date,
+// and message — including every subsequent edit (a license confirmation,
+// a provenance correction), not just the original add. Consumers
+// construct that link themselves from EntryFilePath(id); it's a fixed
+// convention, not data that needs storing or can go stale.
 type Source struct {
 	Origin     string               `json:"origin"`
 	Toolchain  string               `json:"toolchain,omitempty"`
 	License    string               `json:"license,omitempty"`
 	OpenSource bool                 `json:"openSource"`
-	AddedBy    string               `json:"addedBy"`
 	VerifiedBy []VerificationRecord `json:"verifiedBy,omitempty"`
 }
 

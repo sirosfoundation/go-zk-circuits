@@ -60,7 +60,7 @@ func usage() {
 	fmt.Fprintln(os.Stderr, `circuitctl — publish and manage the zk-circuits catalog
 
 Usage:
-  circuitctl add <file> --system <system> --origin <url> --added-by <who> [--unpublished] [options]
+  circuitctl add <file> --system <system> --origin <url> [--unpublished] [options]
   circuitctl verify [--root <path>] [--generated-at <RFC3339>]
   circuitctl ls [--root <path>] [--stale]
   circuitctl deprecate <id> --reason <text> [--root <path>]
@@ -118,7 +118,7 @@ func splitLeadingPositional(args []string, boolFlags map[string]bool) (positiona
 func runAdd(args []string) error {
 	file, flagArgs, err := splitLeadingPositional(args, map[string]bool{"unpublished": true, "open-source": true})
 	if err != nil {
-		return fmt.Errorf("%w (usage: circuitctl add <file> --system <system> --origin <url> --added-by <who> [options])", err)
+		return fmt.Errorf("%w (usage: circuitctl add <file> --system <system> --origin <url> [options])", err)
 	}
 	args = flagArgs
 
@@ -130,7 +130,6 @@ func runAdd(args []string) error {
 	toolchain := fs.String("toolchain", "", "what actually built these bytes: compiler/tool name+version, build command, or CI job (spec §2.8.1) — leave unset if unknown, do not write a paragraph explaining why")
 	license := fs.String("license", "", "SPDX id or short statement")
 	openSource := fs.Bool("open-source", false, "affirmatively claim this is open source (spec §2.8.1) — default false, NOT inferred from --license")
-	addedBy := fs.String("added-by", "", "human or automation publishing this entry — required")
 	notes := fs.String("notes", "", "free text for humans (spec §2.4) — clients MUST NOT parse it")
 	unpublished := fs.Bool("unpublished", false, "keep this entry out of the served manifest (spec §2.4.1) — default is published")
 	generatedAt := fs.String("generated-at", "", "manifest generatedAt to write (RFC3339); defaults to now")
@@ -161,7 +160,6 @@ func runAdd(args []string) error {
 		Toolchain:      *toolchain,
 		License:        *license,
 		OpenSource:     *openSource,
-		AddedBy:        *addedBy,
 		Notes:          *notes,
 		Unpublished:    *unpublished,
 		ExplicitParams: explicitParams,

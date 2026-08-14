@@ -79,7 +79,7 @@ func buildCatalogFixture(t *testing.T) string {
 	inputDir := t.TempDir()
 	inputFile := filepath.Join(inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef")
 	require.NoError(t, os.WriteFile(inputFile, compressed, 0o600))
-	_, err = publish.Add(root, publish.AddOptions{InputFile: inputFile, System: "longfellow", Origin: "o", AddedBy: "a"})
+	_, err = publish.Add(root, publish.AddOptions{InputFile: inputFile, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 	require.NoError(t, publish.RegenerateManifest(root, "2026-08-14T00:00:00Z"))
 	return root

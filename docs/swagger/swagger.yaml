@@ -110,8 +110,6 @@ definitions:
     type: object
   catalog.Source:
     properties:
-      addedBy:
-        type: string
       license:
         type: string
       openSource:

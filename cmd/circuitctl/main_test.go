@@ -35,21 +35,21 @@ func TestSplitLeadingPositional_BoolFlagDoesNotSwallowNextFlag(t *testing.T) {
 	// value-taking flags previously consumed the next flag's NAME as its
 	// own "value", stranding that flag's real value as a bare token that
 	// got misidentified as a second positional argument. Caught by manual
-	// testing against `circuitctl add ... --open-source --added-by X`,
+	// testing against `circuitctl add ... --open-source --toolchain X`,
 	// not by any test — hence this one.
 	pos, rest, err := splitLeadingPositional([]string{
-		"file.zst", "--license", "MPL-2.0", "--open-source", "--added-by", "demo@example.invalid",
+		"file.zst", "--license", "MPL-2.0", "--open-source", "--toolchain", "bazel 7.1",
 	}, map[string]bool{"open-source": true})
 	require.NoError(t, err)
 	require.Equal(t, "file.zst", pos)
-	require.Equal(t, []string{"--license", "MPL-2.0", "--open-source", "--added-by", "demo@example.invalid"}, rest)
+	require.Equal(t, []string{"--license", "MPL-2.0", "--open-source", "--toolchain", "bazel 7.1"}, rest)
 }
 
 func TestSplitLeadingPositional_BoolFlagAtEnd(t *testing.T) {
-	pos, rest, err := splitLeadingPositional([]string{"file.zst", "--added-by", "a", "--unpublished"}, map[string]bool{"unpublished": true})
+	pos, rest, err := splitLeadingPositional([]string{"file.zst", "--toolchain", "a", "--unpublished"}, map[string]bool{"unpublished": true})
 	require.NoError(t, err)
 	require.Equal(t, "file.zst", pos)
-	require.Equal(t, []string{"--added-by", "a", "--unpublished"}, rest)
+	require.Equal(t, []string{"--toolchain", "a", "--unpublished"}, rest)
 }
 
 func TestSplitLeadingPositional_RejectsMultiplePositionals(t *testing.T) {
@@ -89,7 +89,7 @@ func addFixture(t *testing.T, root string) string {
 		[]byte("fake circuit bytes for circuitctl main_test"))
 	require.NoError(t, runAdd([]string{
 		file, "--root", root, "--system", "longfellow",
-		"--origin", "https://example.invalid/test", "--added-by", "test@example.invalid",
+		"--origin", "https://example.invalid/test",
 	}))
 	return "longfellow-libzk-v1_8_2_4307_2945"
 }
@@ -110,7 +110,7 @@ func TestRunAdd_MissingOriginFails(t *testing.T) {
 	file := writeZstdFixture(t, inputDir,
 		"8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
 		[]byte("fake circuit bytes"))
-	err := runAdd([]string{file, "--root", root, "--system", "longfellow", "--added-by", "test@example.invalid"})
+	err := runAdd([]string{file, "--root", root, "--system", "longfellow"})
 	require.Error(t, err)
 }
 
@@ -127,7 +127,7 @@ func TestRunAdd_BadParamFormat(t *testing.T) {
 		[]byte("fake circuit bytes"))
 	err := runAdd([]string{
 		file, "--root", root, "--system", "longfellow",
-		"--origin", "o", "--added-by", "a", "--param", "not-a-key-value-pair",
+		"--origin", "o", "--param", "not-a-key-value-pair",
 	})
 	require.Error(t, err)
 }

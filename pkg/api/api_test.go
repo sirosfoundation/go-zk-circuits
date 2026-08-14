@@ -35,7 +35,7 @@ func newTestServer(t *testing.T) (*gin.Engine, *ServerContext, string) {
 	require.NoError(t, os.WriteFile(inputFile, compressed, 0o600))
 
 	_, err = publish.Add(root, publish.AddOptions{
-		InputFile: inputFile, System: "longfellow", Origin: "o", AddedBy: "a",
+		InputFile: inputFile, System: "longfellow", Origin: "o",
 		Aliases: []string{"longfellow-8-2"},
 	})
 	require.NoError(t, err)
@@ -300,13 +300,13 @@ func TestUnpublishedEntry_FullyInvisible(t *testing.T) {
 	// end to end, including its raw bytes at the content-addressed path.
 	publishedFile := filepath.Join(t.TempDir(), "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef")
 	require.NoError(t, os.WriteFile(publishedFile, enc.EncodeAll([]byte("published circuit bytes"), nil), 0o600))
-	_, err = publish.Add(root, publish.AddOptions{InputFile: publishedFile, System: "longfellow", Origin: "o", AddedBy: "a"})
+	_, err = publish.Add(root, publish.AddOptions{InputFile: publishedFile, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 
 	unpublishedFile := filepath.Join(t.TempDir(), "8_3_4463_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef")
 	require.NoError(t, os.WriteFile(unpublishedFile, enc.EncodeAll([]byte("unpublished circuit bytes"), nil), 0o600))
 	unpubResult, err := publish.Add(root, publish.AddOptions{
-		InputFile: unpublishedFile, System: "longfellow", Origin: "o", AddedBy: "a", Unpublished: true,
+		InputFile: unpublishedFile, System: "longfellow", Origin: "o", Unpublished: true,
 	})
 	require.NoError(t, err)
 	unpubHex := unpubResult.Entry.Artifact.Hash[len("sha256:"):]

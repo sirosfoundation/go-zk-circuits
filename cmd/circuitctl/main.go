@@ -126,10 +126,8 @@ func runAdd(args []string) error {
 	root := fs.String("root", ".", "catalog repo root")
 	system := fs.String("system", "", "proof-system family, e.g. longfellow")
 	id := fs.String("id", "", "explicit id (derived from filename convention if omitted, longfellow only)")
-	origin := fs.String("origin", "", "where these bytes came from (spec §2.8) — required")
-	originRef := fs.String("origin-ref", "", "commit SHA / tag / PR number pinning the origin")
-	originPath := fs.String("origin-path", "", "path within the origin")
-	toolchain := fs.String("toolchain", "", "what actually built these bytes: compiler/tool name+version, build command, or CI job (spec §2.8.1)")
+	origin := fs.String("origin", "", "where these bytes came from (spec §2.8) — required; a commit-pinned URL (e.g. a GitHub blob link with a commit SHA in it) is a complete reference on its own, no separate ref/path fields needed")
+	toolchain := fs.String("toolchain", "", "what actually built these bytes: compiler/tool name+version, build command, or CI job (spec §2.8.1) — leave unset if unknown, do not write a paragraph explaining why")
 	license := fs.String("license", "", "SPDX id or short statement")
 	openSource := fs.Bool("open-source", false, "affirmatively claim this is open source (spec §2.8.1) — default false, NOT inferred from --license")
 	addedBy := fs.String("added-by", "", "human or automation publishing this entry — required")
@@ -160,8 +158,6 @@ func runAdd(args []string) error {
 		Aliases:        aliases,
 		DocTypes:       docTypes,
 		Origin:         *origin,
-		OriginRef:      *originRef,
-		OriginPath:     *originPath,
 		Toolchain:      *toolchain,
 		License:        *license,
 		OpenSource:     *openSource,

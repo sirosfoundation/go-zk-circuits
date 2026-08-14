@@ -434,13 +434,13 @@ const docTemplate = `{
                 "license": {
                     "type": "string"
                 },
+                "openSource": {
+                    "type": "boolean"
+                },
                 "origin": {
                     "type": "string"
                 },
-                "originPath": {
-                    "type": "string"
-                },
-                "originRef": {
+                "toolchain": {
                     "type": "string"
                 },
                 "verifiedBy": {

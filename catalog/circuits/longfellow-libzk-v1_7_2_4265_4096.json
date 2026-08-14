@@ -29,9 +29,6 @@
   },
   "source": {
     "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_2_4265_4096_6a5810683e62b6d7766ebd0d7ca72518a2b8325418142adcadb10d51dbbcd5ad",
-    "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-    "originPath": "multipaz-longfellow/src/commonMain/circuits/7_2_4265_4096_6a5810683e62b6d7766ebd0d7ca72518a2b8325418142adcadb10d51dbbcd5ad",
-    "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
     "license": "Apache-2.0",
     "openSource": true,
     "addedBy": "leifj@siros.org"

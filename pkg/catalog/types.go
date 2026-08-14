@@ -99,8 +99,6 @@ type Uncompressed struct {
 // claim from whoever ran `circuitctl add --open-source`.
 type Source struct {
 	Origin     string               `json:"origin"`
-	OriginRef  string               `json:"originRef,omitempty"`
-	OriginPath string               `json:"originPath,omitempty"`
 	Toolchain  string               `json:"toolchain,omitempty"`
 	License    string               `json:"license,omitempty"`
 	OpenSource bool                 `json:"openSource"`

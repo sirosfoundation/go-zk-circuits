@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-08-13T14:23:53Z",
+  "generatedAt": "2026-08-14T20:11:13Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -330,6 +330,48 @@
       },
       "publishedAt": "2026-08-13T14:23:53Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
+    },
+    {
+      "id": "longfellow-libzk-v1_8_2_4307_2945",
+      "aliases": [
+        "longfellow-8-2"
+      ],
+      "system": "longfellow",
+      "systemVersion": "8",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL",
+        "eu.europa.ec.eudi.pid.1"
+      ],
+      "published": true,
+      "status": "active",
+      "params": {
+        "block_enc_hash": 4307,
+        "block_enc_sig": 2945,
+        "circuit_hash": "bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5",
+        "num_attributes": 2,
+        "upstream_filename": "8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5",
+        "version": 8
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/75840eebd3c63ba44f47be333bcbc93503d67c034600517df2f84312c8d4e79b",
+        "hash": "sha256:75840eebd3c63ba44f47be333bcbc93503d67c034600517df2f84312c8d4e79b",
+        "size": 326208,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:aca1601b56201eef6fce7122ffba78aa1d843956d4d6e486eb1f6c9624217697",
+          "size": 108970674
+        }
+      },
+      "source": {
+        "origin": "Private balfanz/multipaz fork (branch ppid); no public repository URL exists for these bytes.",
+        "originPath": "multipaz-longfellow/src/commonMain/circuits/8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5",
+        "toolchain": "NOT CONFIRMED - believed to originate from the zk-cred-longfellow / libzk Rust toolchain (per parent plan), but the exact compiler version and build command used to produce THESE specific bytes have not been verified against the private fork's build system",
+        "openSource": false,
+        "addedBy": "leifj@siros.org"
+      },
+      "publishedAt": "2026-08-13T11:32:59Z",
+      "notes": "Publication authorized via the go-zk-circuits PR/commit that set published=true on this entry — see this file's git history for the authorization record, rather than restating it here. No commit SHA exists for these bytes independently of this catalog: they are sourced from a private, unversioned fork copy with no public repository URL. License terms have not been separately confirmed: do not infer an open-source license from this entry's presence in the catalog."
     }
   ],
   "next": null

@@ -104,6 +104,19 @@ func TestReadyz_NotReadyWhenArtifactMissingFromFS(t *testing.T) {
 	require.Contains(t, resp.Message, entries[0].Name())
 }
 
+func TestInfoHandler_ReturnsCatalogMetadata(t *testing.T) {
+	r, _, _ := newTestServer(t)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/info", nil))
+	require.Equal(t, http.StatusOK, w.Code)
+
+	var resp InfoResponse
+	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &resp))
+	require.Equal(t, "siros-zk-circuits", resp.Catalog)
+	require.Equal(t, 1, resp.CircuitCount)
+	require.Equal(t, "2026-08-13T21:40:11Z", resp.GeneratedAt)
+}
+
 func TestManifest_FetchAndConditionalRevalidate(t *testing.T) {
 	r, _, _ := newTestServer(t)
 
@@ -196,6 +209,45 @@ func TestCircuitsFilter_DefaultsToActiveOnly(t *testing.T) {
 	var m2 catalog.Manifest
 	require.NoError(t, json.Unmarshal(w2.Body.Bytes(), &m2))
 	require.Len(t, m2.Circuits, 1)
+}
+
+func filteredCount(t *testing.T, r *gin.Engine, query string) int {
+	t.Helper()
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "/v1/circuits"+query, nil))
+	require.Equal(t, http.StatusOK, w.Code)
+	var m catalog.Manifest
+	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &m))
+	return len(m.Circuits)
+}
+
+func TestCircuitsFilter_BySystem(t *testing.T) {
+	r, _, _ := newTestServer(t)
+	require.Equal(t, 1, filteredCount(t, r, "?system=longfellow"))
+	require.Equal(t, 0, filteredCount(t, r, "?system=other"))
+}
+
+func TestCircuitsFilter_ByVersion(t *testing.T) {
+	r, _, _ := newTestServer(t)
+	require.Equal(t, 1, filteredCount(t, r, "?version=8"))
+	require.Equal(t, 0, filteredCount(t, r, "?version=99"))
+}
+
+func TestCircuitsFilter_ByNumAttributes(t *testing.T) {
+	r, _, _ := newTestServer(t)
+	require.Equal(t, 1, filteredCount(t, r, "?numAttributes=2"))
+	require.Equal(t, 0, filteredCount(t, r, "?numAttributes=99"))
+}
+
+func TestCircuitsFilter_ByDocType(t *testing.T) {
+	r, _, _ := newTestServer(t)
+	require.Equal(t, 0, filteredCount(t, r, "?docType=org.iso.18013.5.1.mDL"), "fixture has no docTypes set")
+}
+
+func TestCircuitsFilter_CombinedFiltersAreANDed(t *testing.T) {
+	r, _, _ := newTestServer(t)
+	require.Equal(t, 0, filteredCount(t, r, "?system=longfellow&version=99"))
+	require.Equal(t, 1, filteredCount(t, r, "?system=longfellow&version=8"))
 }
 
 func TestCircuitsFilter_UnknownParamIsIgnoredNotRejected(t *testing.T) {

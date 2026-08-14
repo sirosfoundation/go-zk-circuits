@@ -1,6 +1,7 @@
 package catalog
 
 import (
+	"encoding/json"
 	"testing"
 	"testing/fstest"
 
@@ -127,4 +128,62 @@ func TestLoadEntriesFromDir_MissingDirIsNotAnError(t *testing.T) {
 func TestEntryFilePath_And_ArtifactFilePath(t *testing.T) {
 	require.Equal(t, "catalog/circuits/foo.json", EntryFilePath("foo"))
 	require.Equal(t, "artifacts/sha256/deadbeef", ArtifactFilePath("deadbeef"))
+}
+
+func TestLoadEntriesFromDir_ReadsAndSkipsNonJSON(t *testing.T) {
+	entryBytes, err := json.Marshal(sampleEntry("a"))
+	require.NoError(t, err)
+
+	fsys := fstest.MapFS{
+		"catalog/circuits/a.json":     {Data: entryBytes},
+		"catalog/circuits/README.txt": {Data: []byte("not json, must be skipped")},
+	}
+
+	entries, err := LoadEntriesFromDir(fsys, "catalog/circuits")
+	require.NoError(t, err)
+	require.Len(t, entries, 1)
+	require.Equal(t, "a", entries[0].ID)
+}
+
+func TestLoadEntriesFromDir_SkipsSubdirectories(t *testing.T) {
+	entryBytes, err := json.Marshal(sampleEntry("a"))
+	require.NoError(t, err)
+
+	fsys := fstest.MapFS{
+		"catalog/circuits/a.json":        {Data: entryBytes},
+		"catalog/circuits/subdir/b.json": {Data: entryBytes},
+	}
+
+	entries, err := LoadEntriesFromDir(fsys, "catalog/circuits")
+	require.NoError(t, err)
+	require.Len(t, entries, 1, "a directory entry must be skipped, not descended into")
+}
+
+func TestLoadEntriesFromDir_RejectsInvalidJSON(t *testing.T) {
+	fsys := fstest.MapFS{"catalog/circuits/bad.json": {Data: []byte("not json")}}
+	_, err := LoadEntriesFromDir(fsys, "catalog/circuits")
+	require.Error(t, err)
+}
+
+func TestLoadManifestFile_HappyPath(t *testing.T) {
+	m := BuildManifest([]CircuitDescriptor{sampleEntry("a")}, "2026-08-13T21:40:11Z")
+	data, err := MarshalDeterministic(m)
+	require.NoError(t, err)
+	fsys := fstest.MapFS{"catalog/manifest.json": {Data: data}}
+
+	loaded, err := LoadManifestFile(fsys, "catalog/manifest.json")
+	require.NoError(t, err)
+	require.Equal(t, "a", loaded.Circuits[0].ID)
+}
+
+func TestLoadManifestFile_MissingFile(t *testing.T) {
+	fsys := fstest.MapFS{}
+	_, err := LoadManifestFile(fsys, "catalog/manifest.json")
+	require.Error(t, err)
+}
+
+func TestLoadManifestFile_InvalidJSON(t *testing.T) {
+	fsys := fstest.MapFS{"catalog/manifest.json": {Data: []byte("not json")}}
+	_, err := LoadManifestFile(fsys, "catalog/manifest.json")
+	require.Error(t, err)
 }

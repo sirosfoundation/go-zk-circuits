@@ -25,8 +25,51 @@ jobs:
       - name: Build
         run: go build -v ./...
 
+      # -coverpkg=./... attributes coverage across package boundaries (e.g.
+      # pkg/api's tests exercising pkg/catalog's LoadManifestFile) instead of
+      # only counting a package's own test file — without it the reported
+      # total meaningfully understates real coverage.
       - name: Test
-        run: go test -v -race -timeout 10m -coverprofile=coverage.txt -covermode=atomic ./...
+        run: go test -v -race -timeout 10m -coverprofile=cover.out -covermode=atomic -coverpkg=./... ./...
+
+      - name: Upload coverage profile
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-profile
+          path: cover.out
+
+  coverage-gate:
+    name: Check test coverage
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    # contents: write is only exercised by go-test-coverage's own git push
+    # of the coverage badge, and only when git-token below is non-empty
+    # (push to main). Kept on this small, single-purpose job rather than on
+    # build-and-test, which runs many more steps/third-party actions against
+    # PR-branch code and has no legitimate reason to hold a write-capable
+    # token (flagged by Copilot review on PR #2 — least-privilege, not a
+    # hypothetical).
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Download coverage profile
+        uses: actions/download-artifact@v8
+        with:
+          name: coverage-profile
+
+      # Enforces .testcoverage.yml's thresholds as a real CI gate, not just
+      # a one-time check — a PR that drops coverage below them fails here.
+      # On push to main only, also regenerates and commits the coverage
+      # badge to the "badges" branch (README's coverage badge reads from
+      # there), matching the convention used across this org's other Go
+      # repos (e.g. go-grc, go-cryptoutil).
+      - name: Check test coverage
+        uses: vladopajic/go-test-coverage@f94bcf0d6b9fa5fb8b783830b22648f6c17475e2 # v2.19.0
+        with:
+          config: ./.testcoverage.yml
+          git-token: ${{ github.ref_name == 'main' && secrets.GITHUB_TOKEN || '' }}
+          git-branch: badges
 
   circuitctl-verify:
     name: circuitctl verify (catalog integrity gate)

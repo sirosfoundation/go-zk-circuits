@@ -1,0 +1,31 @@
+name: Security
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # govulncheck already runs as its own job in ci.yml, pinned via go.mod's
+  # tool directive rather than a hardcoded version — not duplicated here.
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # continue-on-error: this org's default policy
+      # (dependency_graph_enabled_for_new_repositories) leaves the
+      # Dependency graph off for newly created repos, which this action
+      # hard-requires — confirmed via the API, and confirmed this is an
+      # org/repo settings gap rather than a workflow bug by checking a
+      # sibling repo with the identical workflow, where it passes. No API
+      # exists to flip that setting; someone with repo admin access needs
+      # to enable it at Settings > Advanced Security > Dependency graph.
+      # Remove continue-on-error once that's done.
+      - name: Dependency Review
+        continue-on-error: true
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

@@ -98,6 +98,66 @@ func TestAdd_RejectsIDCollision(t *testing.T) {
 	require.Error(t, err, "adding the same id twice must fail")
 }
 
+func TestAdd_RejectsAliasCollidingWithExistingID(t *testing.T) {
+	root := t.TempDir()
+	inputDir := t.TempDir()
+	fileA := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("a"))
+	_, err := Add(root, AddOptions{InputFile: fileA, System: "longfellow", Origin: "o", AddedBy: "a"})
+	require.NoError(t, err)
+
+	fileB := writeZstdFixture(t, inputDir, "8_3_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("b"))
+	_, err = Add(root, AddOptions{
+		InputFile: fileB, System: "longfellow", Origin: "o", AddedBy: "a",
+		Aliases: []string{"longfellow-libzk-v1_8_2_4307_2945"}, // collides with fileA's id
+	})
+	require.Error(t, err)
+}
+
+func TestAdd_RejectsIDCollidingWithExistingAlias(t *testing.T) {
+	root := t.TempDir()
+	inputDir := t.TempDir()
+	fileA := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("a"))
+	_, err := Add(root, AddOptions{
+		InputFile: fileA, System: "longfellow", Origin: "o", AddedBy: "a",
+		Aliases: []string{"shared-alias"},
+	})
+	require.NoError(t, err)
+
+	fileB := writeZstdFixture(t, inputDir, "8_3_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("b"))
+	_, err = Add(root, AddOptions{InputFile: fileB, System: "longfellow", ID: "shared-alias", Origin: "o", AddedBy: "a"})
+	require.Error(t, err)
+}
+
+func TestAdd_RejectsAliasCollidingWithExistingAlias(t *testing.T) {
+	root := t.TempDir()
+	inputDir := t.TempDir()
+	fileA := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("a"))
+	_, err := Add(root, AddOptions{
+		InputFile: fileA, System: "longfellow", Origin: "o", AddedBy: "a",
+		Aliases: []string{"shared-alias"},
+	})
+	require.NoError(t, err)
+
+	fileB := writeZstdFixture(t, inputDir, "8_3_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("b"))
+	_, err = Add(root, AddOptions{
+		InputFile: fileB, System: "longfellow", Origin: "o", AddedBy: "a",
+		Aliases: []string{"shared-alias"},
+	})
+	require.Error(t, err)
+}
+
+func TestIsZstdFrame(t *testing.T) {
+	require.False(t, IsZstdFrame(nil))
+	require.False(t, IsZstdFrame([]byte{0x01, 0x02}))
+	require.False(t, IsZstdFrame([]byte{0x00, 0x00, 0x00, 0x00, 0x00}))
+
+	enc, err := zstd.NewWriter(nil)
+	require.NoError(t, err)
+	frame := enc.EncodeAll([]byte("real frame"), nil)
+	require.NoError(t, enc.Close())
+	require.True(t, IsZstdFrame(frame))
+}
+
 func TestAdd_RejectsOversizedInput(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()

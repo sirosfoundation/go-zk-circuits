@@ -22,8 +22,6 @@ type AddOptions struct {
 	Aliases        []string
 	DocTypes       []string
 	Origin         string
-	OriginRef      string
-	OriginPath     string
 	Toolchain      string
 	License        string
 	OpenSource     bool // spec §2.8.1: default false — requires an affirmative claim, not inferred from License
@@ -74,8 +72,6 @@ func Add(root string, opts AddOptions) (*AddResult, error) {
 		Notes:     opts.Notes,
 		Source: &catalog.Source{
 			Origin:     opts.Origin,
-			OriginRef:  opts.OriginRef,
-			OriginPath: opts.OriginPath,
 			Toolchain:  opts.Toolchain,
 			License:    opts.License,
 			OpenSource: opts.OpenSource,

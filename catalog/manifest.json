@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-08-14T20:21:29Z",
+  "generatedAt": "2026-08-14T20:25:32Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -34,9 +34,6 @@
       },
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_1_4096_2945_137e5a75ce72735a37c8a72da1a8a0a5df8d13365c2ae3d2c2bd6a0e7197c7c6",
-        "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/6_1_4096_2945_137e5a75ce72735a37c8a72da1a8a0a5df8d13365c2ae3d2c2bd6a0e7197c7c6",
-        "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"
@@ -75,9 +72,6 @@
       },
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_2_4025_2945_b4bb6f01b7043f4f51d8302a30b36e3d4d2d0efc3c24557ab9212ad524a9764e",
-        "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/6_2_4025_2945_b4bb6f01b7043f4f51d8302a30b36e3d4d2d0efc3c24557ab9212ad524a9764e",
-        "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"
@@ -116,9 +110,6 @@
       },
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_3_4121_2945_b2211223b954b34a1081e3fbf71b8ea2de28efc888b4be510f532d6ba76c2010",
-        "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/6_3_4121_2945_b2211223b954b34a1081e3fbf71b8ea2de28efc888b4be510f532d6ba76c2010",
-        "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"
@@ -157,9 +148,6 @@
       },
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_4_4283_2945_c70b5f44a1365c53847eb8948ad5b4fdc224251a2bc02d958c84c862823c49d6",
-        "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/6_4_4283_2945_c70b5f44a1365c53847eb8948ad5b4fdc224251a2bc02d958c84c862823c49d6",
-        "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"
@@ -198,9 +186,6 @@
       },
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_1_4151_4096_8d079211715200ff06c5109639245502bfe94aa869908d31176aae4016182121",
-        "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/7_1_4151_4096_8d079211715200ff06c5109639245502bfe94aa869908d31176aae4016182121",
-        "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"
@@ -239,9 +224,6 @@
       },
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_2_4265_4096_6a5810683e62b6d7766ebd0d7ca72518a2b8325418142adcadb10d51dbbcd5ad",
-        "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/7_2_4265_4096_6a5810683e62b6d7766ebd0d7ca72518a2b8325418142adcadb10d51dbbcd5ad",
-        "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"
@@ -280,9 +262,6 @@
       },
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_3_4307_4096_8ee4849ae1293ae6fe5f9082ce3e5e15c4f198f2998c682fa1b727237d6d252f",
-        "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/7_3_4307_4096_8ee4849ae1293ae6fe5f9082ce3e5e15c4f198f2998c682fa1b727237d6d252f",
-        "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"
@@ -321,9 +300,6 @@
       },
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_4_4415_4096_5aebdaaafe17296a3ef3ca6c80c6e7505e09291897c39700410a365fb278e460",
-        "originRef": "bfb5a44fb8ee23b0d724ac287d029303aa5139e0",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/7_4_4415_4096_5aebdaaafe17296a3ef3ca6c80c6e7505e09291897c39700410a365fb278e460",
-        "toolchain": "not recorded — vendored as pre-built binaries in the multipaz repo (PR #1673); no build command documented there",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"
@@ -364,9 +340,7 @@
         }
       },
       "source": {
-        "origin": "Private balfanz/multipaz fork (branch ppid); no public repository URL exists for these bytes.",
-        "originPath": "multipaz-longfellow/src/commonMain/circuits/8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5",
-        "toolchain": "NOT CONFIRMED - believed to originate from the zk-cred-longfellow / libzk Rust toolchain (per parent plan), but the exact compiler version and build command used to produce THESE specific bytes have not been verified against the private fork's build system",
+        "origin": "Private balfanz/multipaz fork (branch ppid), path multipaz-longfellow/src/commonMain/circuits/8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5; no public repository URL exists for these bytes.",
         "license": "Apache-2.0",
         "openSource": true,
         "addedBy": "leifj@siros.org"

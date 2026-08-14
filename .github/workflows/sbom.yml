@@ -30,6 +30,7 @@ jobs:
       scan-vulnerabilities: true
       sign-sbom: false
     permissions:
+      contents: read
       security-events: write
 
   sbom-release:

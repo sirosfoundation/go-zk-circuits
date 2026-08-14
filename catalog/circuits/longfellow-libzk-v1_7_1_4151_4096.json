@@ -30,8 +30,7 @@
   "source": {
     "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_1_4151_4096_8d079211715200ff06c5109639245502bfe94aa869908d31176aae4016182121",
     "license": "Apache-2.0",
-    "openSource": true,
-    "addedBy": "leifj@siros.org"
+    "openSource": true
   },
   "publishedAt": "2026-08-13T14:23:52Z",
   "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."

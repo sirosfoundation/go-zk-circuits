@@ -428,9 +428,6 @@ const docTemplate = `{
         "catalog.Source": {
             "type": "object",
             "properties": {
-                "addedBy": {
-                    "type": "string"
-                },
                 "license": {
                     "type": "string"
                 },

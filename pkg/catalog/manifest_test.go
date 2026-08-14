@@ -19,8 +19,7 @@ func sampleEntry(id string) CircuitDescriptor {
 			"num_attributes": float64(2),
 		},
 		Source: &Source{
-			Origin:  "https://example.invalid/origin",
-			AddedBy: "test@example.invalid",
+			Origin: "https://example.invalid/origin",
 		},
 		PublishedAt: "2026-08-13T21:40:11Z",
 	}

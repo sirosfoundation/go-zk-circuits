@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-08-14T20:25:32Z",
+  "generatedAt": "2026-08-14T20:53:23Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -35,8 +35,7 @@
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_1_4096_2945_137e5a75ce72735a37c8a72da1a8a0a5df8d13365c2ae3d2c2bd6a0e7197c7c6",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T14:23:52Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
@@ -73,8 +72,7 @@
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_2_4025_2945_b4bb6f01b7043f4f51d8302a30b36e3d4d2d0efc3c24557ab9212ad524a9764e",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T14:23:52Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
@@ -111,8 +109,7 @@
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_3_4121_2945_b2211223b954b34a1081e3fbf71b8ea2de28efc888b4be510f532d6ba76c2010",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T14:23:52Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
@@ -149,8 +146,7 @@
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/6_4_4283_2945_c70b5f44a1365c53847eb8948ad5b4fdc224251a2bc02d958c84c862823c49d6",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T14:23:52Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
@@ -187,8 +183,7 @@
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_1_4151_4096_8d079211715200ff06c5109639245502bfe94aa869908d31176aae4016182121",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T14:23:52Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
@@ -225,8 +220,7 @@
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_2_4265_4096_6a5810683e62b6d7766ebd0d7ca72518a2b8325418142adcadb10d51dbbcd5ad",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T14:23:53Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
@@ -263,8 +257,7 @@
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_3_4307_4096_8ee4849ae1293ae6fe5f9082ce3e5e15c4f198f2998c682fa1b727237d6d252f",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T14:23:53Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
@@ -301,8 +294,7 @@
       "source": {
         "origin": "https://github.com/openwallet-foundation/multipaz/blob/bfb5a44fb8ee23b0d724ac287d029303aa5139e0/multipaz-longfellow/src/commonMain/circuits/7_4_4415_4096_5aebdaaafe17296a3ef3ca6c80c6e7505e09291897c39700410a365fb278e460",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T14:23:53Z",
       "notes": "Vendored from the public openwallet-foundation/multipaz repo (Apache-2.0), pinned to commit bfb5a44fb8ee23b0d724ac287d029303aa5139e0 (PR #1673, 'Bundle circuits in multipaz-longfellow library'). Clean provenance, unlike the v8 entry."
@@ -342,8 +334,7 @@
       "source": {
         "origin": "Private balfanz/multipaz fork (branch ppid), path multipaz-longfellow/src/commonMain/circuits/8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5; no public repository URL exists for these bytes.",
         "license": "Apache-2.0",
-        "openSource": true,
-        "addedBy": "leifj@siros.org"
+        "openSource": true
       },
       "publishedAt": "2026-08-13T11:32:59Z",
       "notes": "Publication authorized via the go-zk-circuits PR/commit that set published=true on this entry — see this file's git history for the authorization record, rather than restating it here. No commit SHA exists for these bytes independently of this catalog: they are sourced from a private, unversioned fork copy with no public repository URL."

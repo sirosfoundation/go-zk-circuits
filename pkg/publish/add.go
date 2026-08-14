@@ -24,8 +24,7 @@ type AddOptions struct {
 	Origin         string
 	Toolchain      string
 	License        string
-	OpenSource     bool // spec §2.8.1: default false — requires an affirmative claim, not inferred from License
-	AddedBy        string
+	OpenSource     bool              // spec §2.8.1: default false — requires an affirmative claim, not inferred from License
 	ExplicitParams map[string]string // from repeated --param key=value
 	MaxBytes       int64             // 0 = DefaultMaxArtifactBytes
 	Now            string            // RFC3339 publishedAt; empty = time.Now().UTC()
@@ -59,8 +58,8 @@ func Add(root string, opts AddOptions) (*AddResult, error) {
 	if opts.System == "" {
 		return nil, fmt.Errorf("--system is required")
 	}
-	if opts.Origin == "" || opts.AddedBy == "" {
-		return nil, fmt.Errorf("--origin and --added-by are required (spec §5.4 gate 2)")
+	if opts.Origin == "" {
+		return nil, fmt.Errorf("--origin is required (spec §5.4 gate 2)")
 	}
 
 	entry := catalog.CircuitDescriptor{
@@ -75,7 +74,6 @@ func Add(root string, opts AddOptions) (*AddResult, error) {
 			Toolchain:  opts.Toolchain,
 			License:    opts.License,
 			OpenSource: opts.OpenSource,
-			AddedBy:    opts.AddedBy,
 		},
 	}
 

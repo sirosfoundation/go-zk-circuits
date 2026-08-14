@@ -55,7 +55,6 @@ func TestAddThenVerify_HappyPath(t *testing.T) {
 		InputFile: file,
 		System:    "longfellow",
 		Origin:    "https://example.invalid/test",
-		AddedBy:   "test@example.invalid",
 	})
 	require.NoError(t, err)
 	require.Equal(t, "longfellow-libzk-v1_8_2_4307_2945", result.Entry.ID)
@@ -77,10 +76,10 @@ func TestAdd_RejectsFilenameParamContradiction(t *testing.T) {
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
 
 	_, err := Add(root, AddOptions{
-		InputFile:      file,
-		System:         "longfellow",
-		Origin:         "https://example.invalid/test",
-		AddedBy:        "test@example.invalid",
+		InputFile: file,
+		System:    "longfellow",
+		Origin:    "https://example.invalid/test",
+
 		ExplicitParams: map[string]string{"num_attributes": "99"},
 	})
 	require.Error(t, err)
@@ -91,10 +90,10 @@ func TestAdd_RejectsIDCollision(t *testing.T) {
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
 
-	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 
-	_, err = Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	_, err = Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.Error(t, err, "adding the same id twice must fail")
 }
 
@@ -102,12 +101,12 @@ func TestAdd_RejectsAliasCollidingWithExistingID(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()
 	fileA := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("a"))
-	_, err := Add(root, AddOptions{InputFile: fileA, System: "longfellow", Origin: "o", AddedBy: "a"})
+	_, err := Add(root, AddOptions{InputFile: fileA, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 
 	fileB := writeZstdFixture(t, inputDir, "8_3_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("b"))
 	_, err = Add(root, AddOptions{
-		InputFile: fileB, System: "longfellow", Origin: "o", AddedBy: "a",
+		InputFile: fileB, System: "longfellow", Origin: "o",
 		Aliases: []string{"longfellow-libzk-v1_8_2_4307_2945"}, // collides with fileA's id
 	})
 	require.Error(t, err)
@@ -118,13 +117,13 @@ func TestAdd_RejectsIDCollidingWithExistingAlias(t *testing.T) {
 	inputDir := t.TempDir()
 	fileA := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("a"))
 	_, err := Add(root, AddOptions{
-		InputFile: fileA, System: "longfellow", Origin: "o", AddedBy: "a",
+		InputFile: fileA, System: "longfellow", Origin: "o",
 		Aliases: []string{"shared-alias"},
 	})
 	require.NoError(t, err)
 
 	fileB := writeZstdFixture(t, inputDir, "8_3_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("b"))
-	_, err = Add(root, AddOptions{InputFile: fileB, System: "longfellow", ID: "shared-alias", Origin: "o", AddedBy: "a"})
+	_, err = Add(root, AddOptions{InputFile: fileB, System: "longfellow", ID: "shared-alias", Origin: "o"})
 	require.Error(t, err)
 }
 
@@ -133,14 +132,14 @@ func TestAdd_RejectsAliasCollidingWithExistingAlias(t *testing.T) {
 	inputDir := t.TempDir()
 	fileA := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("a"))
 	_, err := Add(root, AddOptions{
-		InputFile: fileA, System: "longfellow", Origin: "o", AddedBy: "a",
+		InputFile: fileA, System: "longfellow", Origin: "o",
 		Aliases: []string{"shared-alias"},
 	})
 	require.NoError(t, err)
 
 	fileB := writeZstdFixture(t, inputDir, "8_3_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("b"))
 	_, err = Add(root, AddOptions{
-		InputFile: fileB, System: "longfellow", Origin: "o", AddedBy: "a",
+		InputFile: fileB, System: "longfellow", Origin: "o",
 		Aliases: []string{"shared-alias"},
 	})
 	require.Error(t, err)
@@ -163,27 +162,24 @@ func TestAdd_RejectsOversizedInput(t *testing.T) {
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", make([]byte, 100))
 
-	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a", MaxBytes: 10})
+	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", MaxBytes: 10})
 	require.Error(t, err)
 }
 
-func TestAdd_RequiresOriginAndAddedBy(t *testing.T) {
+func TestAdd_RequiresOrigin(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
 
-	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", AddedBy: "a"})
+	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow"})
 	require.Error(t, err, "missing origin must fail — spec §5.4 gate 2")
-
-	_, err = Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
-	require.Error(t, err, "missing addedBy must fail — spec §5.4 gate 2")
 }
 
 func TestVerify_DetectsHandEditedManifest(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
-	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 	require.NoError(t, RegenerateManifest(root, "2026-08-13T21:40:11Z"))
 
@@ -215,7 +211,7 @@ func TestVerify_DetectsTamperedArtifactBytes(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("original content"))
-	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 	require.NoError(t, RegenerateManifest(root, "2026-08-13T21:40:11Z"))
 
@@ -230,7 +226,7 @@ func TestDeprecateThenRevoke(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
-	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 
 	require.NoError(t, Deprecate(root, result.Entry.ID, "superseded by a newer circuit"))
@@ -250,7 +246,7 @@ func TestLifecycle_RequiresReason(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
-	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 
 	require.Error(t, Deprecate(root, result.Entry.ID, ""))
@@ -261,7 +257,7 @@ func TestAdd_DefaultsToPublished(t *testing.T) {
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
 
-	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 	require.True(t, result.Entry.Published)
 }
@@ -271,7 +267,7 @@ func TestAdd_UnpublishedFlagKeepsEntryOutOfManifest(t *testing.T) {
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
 
-	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a", Unpublished: true})
+	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", Unpublished: true})
 	require.NoError(t, err)
 	require.False(t, result.Entry.Published)
 
@@ -295,13 +291,13 @@ func TestAdd_OpenSourceDefaultsFalseAndCanBeAsserted(t *testing.T) {
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
 
-	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 	require.False(t, result.Entry.Source.OpenSource, "openSource must default to false, not be inferred from anything")
 
 	root2 := t.TempDir()
 	result2, err := Add(root2, AddOptions{
-		InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a",
+		InputFile: file, System: "longfellow", Origin: "o",
 		OpenSource: true, License: "MPL-2.0", Toolchain: "cargo build --release, rustc 1.84.0",
 	})
 	require.NoError(t, err)
@@ -314,7 +310,7 @@ func TestPublishThenUnpublish(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
-	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a", Unpublished: true})
+	result, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", Unpublished: true})
 	require.NoError(t, err)
 	require.False(t, result.Entry.Published)
 
@@ -335,7 +331,7 @@ func TestStaleRows_FlagsUnverifiedActiveEntries(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()
 	file := writeZstdFixture(t, inputDir, "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
-	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", AddedBy: "a"})
+	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o"})
 	require.NoError(t, err)
 
 	stale, err := StaleRows(root)

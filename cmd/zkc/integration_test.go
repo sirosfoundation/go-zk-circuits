@@ -48,7 +48,7 @@ func startTestServer(t *testing.T) *testServer {
 	require.NoError(t, os.WriteFile(inputFile, compressed, 0o600)) //#nosec G304 -- fixed test fixture path under t.TempDir()
 
 	_, err = publish.Add(root, publish.AddOptions{
-		InputFile: inputFile, System: "longfellow", Origin: "o", AddedBy: "a",
+		InputFile: inputFile, System: "longfellow", Origin: "o",
 	})
 	require.NoError(t, err)
 	require.NoError(t, publish.RegenerateManifest(root, "2026-08-13T21:40:11Z"))

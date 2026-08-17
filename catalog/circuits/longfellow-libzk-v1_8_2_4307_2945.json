@@ -1,7 +1,8 @@
 {
   "id": "longfellow-libzk-v1_8_2_4307_2945",
   "aliases": [
-    "longfellow-8-2"
+    "longfellow-8-2",
+    "longfellow-libzk-v1_8_2_4307_2945_bb8e6a26d2700ddad968562d1c4aee83067772fee6f889748a0bc64f2c694ad5"
   ],
   "system": "longfellow",
   "systemVersion": "8",

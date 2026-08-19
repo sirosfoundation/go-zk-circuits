@@ -32,5 +32,5 @@
   },
   "publishedAt": "2026-08-19T22:49:08Z",
   "deprecatedAt": "2026-08-19T23:11:09Z",
-  "notes": "Real ISO 18013-5 MSO/COSE_Sign1 byte framing (see zk-cred-vega's src/mso.rs) -- supersedes vega-mc-p256-v1-verifier-key (deprecated), whose z was only SHA-256 of concatenated claim digests. Unpublished pending an independent security review of the ECDSA/BigNat/EC gadgets -- see mdoc_core.rs's module doc. | deprecated: Superseded by an independent-review fix for two critical ECDSA-gadget soundness bugs (zk-cred-vega commit 8e949be) -- this artifact's Q point allowed a free is_infinity witness bit and unbound public qx/qy, both full signature-forgery breaks. Was never published to the served manifest."
+  "notes": "Real ISO 18013-5 MSO/COSE_Sign1 byte framing (see zk-cred-vega's src/mso.rs) -- supersedes vega-mc-p256-v1-verifier-key (deprecated), whose z was only SHA-256 of concatenated claim digests. The independent security review of the ECDSA/BigNat/EC gadgets (see mdoc_core.rs's module doc) subsequently found the critical issues described below. | deprecated: Superseded by an independent-review fix for two critical ECDSA-gadget soundness bugs (zk-cred-vega commit 8e949be) -- this artifact's Q point allowed a free is_infinity witness bit and unbound public qx/qy, both full signature-forgery breaks. Was never published to the served manifest."
 }

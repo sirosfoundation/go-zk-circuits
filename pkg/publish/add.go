@@ -18,6 +18,7 @@ const DefaultMaxArtifactBytes = 8 * 1024 * 1024
 type AddOptions struct {
 	InputFile      string
 	System         string
+	SystemVersion  string // required for non-longfellow systems; longfellow derives this from the filename if omitted
 	ID             string // optional; derived if empty (longfellow only, for now)
 	Aliases        []string
 	DocTypes       []string
@@ -117,6 +118,9 @@ func Add(root string, opts AddOptions) (*AddResult, error) {
 		params = lf.ToParams()
 		defaultID = lf.DefaultID()
 		entry.SystemVersion = fmt.Sprintf("%d", lf.Version)
+	}
+	if opts.SystemVersion != "" {
+		entry.SystemVersion = opts.SystemVersion // explicit --system-version always wins, including over longfellow's filename-derived default
 	}
 	for k, v := range opts.ExplicitParams {
 		if _, alreadySet := params[k]; !alreadySet {

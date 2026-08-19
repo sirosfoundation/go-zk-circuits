@@ -1,0 +1,35 @@
+{
+  "id": "vega-mc-p256-v1-prover-key",
+  "system": "vega-mc",
+  "systemVersion": "1",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": false,
+  "status": "active",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "64",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/be21ff27a1ee07e03e6f57f79977490104f961c1c80e2c8ef8cb8e608c0af81a",
+    "hash": "sha256:be21ff27a1ee07e03e6f57f79977490104f961c1c80e2c8ef8cb8e608c0af81a",
+    "size": 896313,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:c1d7760492f843f94e08bbde3276e957cac7b038bea6081169b625e5868acd79",
+      "size": 34111418
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/a29b961d53ccd9e1151ae56d19446bc498dc9000/README.md",
+    "toolchain": "microsoft/vega-prover rev c0ee259, zk-cred-vega setup() (sirosfoundation/zk-cred-vega commit a29b961)",
+    "license": "MPL-2.0",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-19T13:39:09Z",
+  "notes": "v1 skeleton: z = SHA-256(claim digests concatenated), not real ISO 18013-5 MSO framing yet. Unpublished pending real-framing work and a security review of the ECDSA/BigNat/EC gadgets -- see zk-cred-vega's mdoc_core.rs module doc."
+}

@@ -73,6 +73,8 @@ go build -o circuitctl ./cmd/circuitctl
 
 This writes `catalog/circuits/<id>.json`, copies the artifact into `artifacts/sha256/<hash>`, and regenerates `catalog/manifest.json` for you — commit all three.
 
+For any system other than `longfellow` (which derives both `id` and `systemVersion` from its own filename convention), pass both explicitly: `--id <your-id> --system-version <version>` — `systemVersion` is a required field with no other way to set it for a new system.
+
 There's deliberately no "added by" field: the git commit that adds or edits an entry is a better record than an identity string typed into JSON — it has a real author, date, and message, and it captures every later edit too, not just the original add. See `catalog/circuits/<id>.json`'s commit history on GitHub for that.
 
 `published`, `openSource`, and `toolchain` all default to the fail-closed value (`false`/empty) unless explicitly asserted — see spec §2.4.1/§2.8.1 for why. An entry with `published: false` stays fully in the repo and fully integrity-checked; it is simply never included in the manifest the service actually serves, and its artifact bytes are unreachable at `/v1/artifacts/*` even though they're compiled into the binary.

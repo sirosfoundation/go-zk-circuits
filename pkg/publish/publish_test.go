@@ -175,6 +175,42 @@ func TestAdd_RequiresOrigin(t *testing.T) {
 	require.Error(t, err, "missing origin must fail — spec §5.4 gate 2")
 }
 
+func TestAdd_RequiresSystemVersionForNonLongfellowSystem(t *testing.T) {
+	root := t.TempDir()
+	inputDir := t.TempDir()
+	file := writeZstdFixture(t, inputDir, "vega-artifact.zst", []byte("fake vega prover key content"))
+
+	_, err := Add(root, AddOptions{
+		InputFile: file,
+		System:    "vega-mc",
+		ID:        "vega-mc-p256-v1-prover-key",
+		Origin:    "o",
+	})
+	require.Error(t, err, "systemVersion has no other way to be set for a non-longfellow system")
+}
+
+func TestAdd_SystemVersionFlagPublishesNonLongfellowSystem(t *testing.T) {
+	root := t.TempDir()
+	inputDir := t.TempDir()
+	file := writeZstdFixture(t, inputDir, "vega-artifact.zst", []byte("fake vega prover key content"))
+
+	result, err := Add(root, AddOptions{
+		InputFile:     file,
+		System:        "vega-mc",
+		SystemVersion: "1",
+		ID:            "vega-mc-p256-v1-prover-key",
+		Origin:        "o",
+		ExplicitParams: map[string]string{
+			"role": "prover",
+		},
+	})
+	require.NoError(t, err)
+	require.Equal(t, "vega-mc-p256-v1-prover-key", result.Entry.ID)
+	require.Equal(t, "1", result.Entry.SystemVersion)
+	require.Equal(t, "prover", result.Entry.Params["role"])
+	require.NoError(t, RegenerateManifest(root, "2026-08-19T00:00:00Z"))
+}
+
 func TestVerify_DetectsHandEditedManifest(t *testing.T) {
 	root := t.TempDir()
 	inputDir := t.TempDir()

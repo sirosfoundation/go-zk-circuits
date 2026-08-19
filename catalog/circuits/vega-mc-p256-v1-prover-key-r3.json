@@ -6,7 +6,7 @@
     "org.iso.18013.5.1.mDL"
   ],
   "published": false,
-  "status": "active",
+  "status": "deprecated",
   "params": {
     "curve": "P-256",
     "maxClaimBytes": "64",
@@ -31,5 +31,6 @@
     "openSource": true
   },
   "publishedAt": "2026-08-19T23:11:23Z",
-  "notes": "Fixes two critical ECDSA-gadget soundness bugs found by an independent security review (see ecdsa.rs's module doc): Q's is_infinity was a free witness bit, and public qx/qy were unbound from the value actually verified against. Supersedes vega-mc-p256-v1-prover-key-r2 (deprecated). Still unpublished -- the review found these two issues; no further re-review has happened yet."
+  "deprecatedAt": "2026-08-19T23:28:19Z",
+  "notes": "Fixes two critical ECDSA-gadget soundness bugs found by an independent security review (see ecdsa.rs's module doc): Q's is_infinity was a free witness bit, and public qx/qy were unbound from the value actually verified against. Supersedes vega-mc-p256-v1-prover-key-r2 (deprecated). Still unpublished -- the review found these two issues; no further re-review has happened yet. | deprecated: Superseded before ever being published/merged: real selective disclosure landed (zk-cred-vega commit abd20fd), changing the step circuit's public-value shape again (per-claim disclosed flag + masked plaintext, not just digest)."
 }

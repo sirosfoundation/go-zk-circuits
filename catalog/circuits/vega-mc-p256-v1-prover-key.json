@@ -32,5 +32,5 @@
   },
   "publishedAt": "2026-08-19T13:39:09Z",
   "deprecatedAt": "2026-08-19T22:48:53Z",
-  "notes": "v1 skeleton: z = SHA-256(claim digests concatenated), not real ISO 18013-5 MSO framing yet. Unpublished pending real-framing work and a security review of the ECDSA/BigNat/EC gadgets -- see zk-cred-vega's mdoc_core.rs module doc. | deprecated: Superseded by real ISO 18013-5 MSO/COSE_Sign1 byte framing (zk-cred-vega commit fbd71d3) -- this artifact's circuit shape only ever hashed concatenated claim digests, never a real Sig_structure. Was never published to the served manifest."
+  "notes": "v1 skeleton: z = SHA-256(claim digests concatenated), not real ISO 18013-5 MSO framing (see deprecation note below). A security review of the ECDSA/BigNat/EC gadgets was also outstanding -- see zk-cred-vega's mdoc_core.rs module doc. | deprecated: Superseded by real ISO 18013-5 MSO/COSE_Sign1 byte framing (zk-cred-vega commit fbd71d3) -- this artifact's circuit shape only ever hashed concatenated claim digests, never a real Sig_structure. Was never published to the served manifest."
 }

@@ -125,6 +125,7 @@ func runAdd(args []string) error {
 	fs := flag.NewFlagSet("add", flag.ExitOnError)
 	root := fs.String("root", ".", "catalog repo root")
 	system := fs.String("system", "", "proof-system family, e.g. longfellow")
+	systemVersion := fs.String("system-version", "", "system-specific version identifier (required for non-longfellow systems; longfellow derives this from the filename if omitted)")
 	id := fs.String("id", "", "explicit id (derived from filename convention if omitted, longfellow only)")
 	origin := fs.String("origin", "", "where these bytes came from (spec §2.8) — required; a commit-pinned URL (e.g. a GitHub blob link with a commit SHA in it) is a complete reference on its own, no separate ref/path fields needed")
 	toolchain := fs.String("toolchain", "", "what actually built these bytes: compiler/tool name+version, build command, or CI job (spec §2.8.1) — leave unset if unknown, do not write a paragraph explaining why")
@@ -153,6 +154,7 @@ func runAdd(args []string) error {
 	result, err := publish.Add(*root, publish.AddOptions{
 		InputFile:      file,
 		System:         *system,
+		SystemVersion:  *systemVersion,
 		ID:             *id,
 		Aliases:        aliases,
 		DocTypes:       docTypes,

@@ -1,0 +1,35 @@
+{
+  "id": "vega-mc-p256-v1-prover-key-r4",
+  "system": "vega-mc",
+  "systemVersion": "4",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": false,
+  "status": "active",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "64",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/728e2b5464720658906e66b05d9cc92c83a35311ef6ca4bde4b622eac8d0d941",
+    "hash": "sha256:728e2b5464720658906e66b05d9cc92c83a35311ef6ca4bde4b622eac8d0d941",
+    "size": 1874554,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:9da7b1ec21f1d9c2ade047f0015d94b9346b1772cc5c01c7749f19a8bdea6d58",
+      "size": 59397402
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/abd20fd3664a3b220912bcaf1d58cd4efa73f7ce/src/lib.rs",
+    "toolchain": "microsoft/vega-prover rev c0ee259, zk-cred-vega setup() (sirosfoundation/zk-cred-vega commit abd20fd)",
+    "license": "MPL-2.0",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-19T23:28:31Z",
+  "notes": "Implements real selective disclosure (per-claim disclosed flag + masked plaintext, not just digest) -- see zk-cred-vega's ClaimDigestStepCircuit doc. Supersedes vega-mc-p256-v1-prover-key-r3 (deprecated, never published). Still unpublished -- pending a further security-review pass over this disclosure masking logic."
+}

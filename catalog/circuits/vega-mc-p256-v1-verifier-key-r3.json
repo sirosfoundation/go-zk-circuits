@@ -1,0 +1,36 @@
+{
+  "id": "vega-mc-p256-v1-verifier-key-r3",
+  "system": "vega-mc",
+  "systemVersion": "3",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": false,
+  "status": "deprecated",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "64",
+    "numClaims": "4",
+    "role": "verifier"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/da367fb8a2aadc8da337094a5933392d48d4b1cdf9e79f407fa14677dd23a7bb",
+    "hash": "sha256:da367fb8a2aadc8da337094a5933392d48d4b1cdf9e79f407fa14677dd23a7bb",
+    "size": 1900962,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:71b91d8322ea2e1e4e0593312f4c7541e6972f5bdd2f888e172d0499abdb6426",
+      "size": 59281436
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/8e949be03dc685c34a3c4fcbeca555c4349f5e5a/src/ecdsa.rs",
+    "toolchain": "microsoft/vega-prover rev c0ee259, zk-cred-vega setup() (sirosfoundation/zk-cred-vega commit 8e949be)",
+    "license": "MPL-2.0",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-19T23:11:23Z",
+  "deprecatedAt": "2026-08-19T23:28:19Z",
+  "notes": "Fixes two critical ECDSA-gadget soundness bugs found by an independent security review (see ecdsa.rs's module doc): Q's is_infinity was a free witness bit, and public qx/qy were unbound from the value actually verified against. Supersedes vega-mc-p256-v1-verifier-key-r2 (deprecated). Still unpublished -- the review found these two issues; no further re-review has happened yet. | deprecated: Superseded before ever being published/merged: real selective disclosure landed (zk-cred-vega commit abd20fd), changing the step circuit's public-value shape again (per-claim disclosed flag + masked plaintext, not just digest)."
+}

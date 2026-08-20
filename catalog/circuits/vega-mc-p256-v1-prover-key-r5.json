@@ -6,7 +6,7 @@
     "org.iso.18013.5.1.mDL"
   ],
   "published": false,
-  "status": "active",
+  "status": "deprecated",
   "params": {
     "curve": "P-256",
     "maxClaimBytes": "128",
@@ -31,5 +31,6 @@
     "openSource": true
   },
   "publishedAt": "2026-08-20T14:47:12Z",
-  "notes": "Closes the real-interop gap: MAX_CLAIM_BYTES_V1 raised 64-\u003e128, digest now computed over the claim's real (witnessed) length via a new sha256_var gadget instead of zero-padded -- see zk-cred-vega's sha256_var.rs module doc. Real, salted ISO 18013-5 IssuerSignedItem claims (79-95+ bytes) now fit and produce a digest matching a real issuer's valueDigests, proven end-to-end against a generated realistic test mdoc (test-vectors/mdl_4claims_mixed_disclosure.json). Supersedes vega-mc-p256-v1-prover-key-r4 (deprecated). Still unpublished -- sha256_var is genuinely novel circuit code and has not had an independent security review yet."
+  "deprecatedAt": "2026-08-20T20:37:10Z",
+  "notes": "Closes the real-interop gap: MAX_CLAIM_BYTES_V1 raised 64-\u003e128, digest now computed over the claim's real (witnessed) length via a new sha256_var gadget instead of zero-padded -- see zk-cred-vega's sha256_var.rs module doc. Real, salted ISO 18013-5 IssuerSignedItem claims (79-95+ bytes) now fit and produce a digest matching a real issuer's valueDigests, proven end-to-end against a generated realistic test mdoc (test-vectors/mdl_4claims_mixed_disclosure.json). Supersedes vega-mc-p256-v1-prover-key-r4 (deprecated). Still unpublished -- sha256_var is genuinely novel circuit code and has not had an independent security review yet. | deprecated: Superseded by r6: variable-width digestID interop (mso_splice/onehot_cursor) + digest_id_extract binding closes the digestID-to-claim-bytes cross-check gap. See sirosfoundation/zk-cred-vega commits ef9fc55/f86d71d."
 }

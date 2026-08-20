@@ -1,0 +1,35 @@
+{
+  "id": "vega-mc-p256-v1-prover-key-r6",
+  "system": "vega-mc",
+  "systemVersion": "6",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": false,
+  "status": "active",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "128",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/6b57889cbfcbc50642ee37b3a6532340153c53dbcfd6296b2bbec60a0bb4b430",
+    "hash": "sha256:6b57889cbfcbc50642ee37b3a6532340153c53dbcfd6296b2bbec60a0bb4b430",
+    "size": 2766099,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:7bc9616a9b6d6a5a8efed899ce426f2a8ff004e97b0b3913b9c4c4998afa89a5",
+      "size": 109819162
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/f86d71dc4ad96627b7f0310eb0fbb53f41966f19/src/mso_splice.rs",
+    "toolchain": "microsoft/vega-prover rev c0ee259, zk-cred-vega setup() (sirosfoundation/zk-cred-vega commit f86d71d)",
+    "license": "MPL-2.0",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-20T20:38:06Z",
+  "notes": "Closes the digestID interop gap fully: arbitrary spec-legal (\u003c2^31) digestIDs at any of the 4 CBOR-uint widths (was hardcoded 0..3), via a new one-hot-cursor-chained splice primitive (onehot_cursor.rs/mso_splice.rs) that assembles the whole variable-length Sig_structure in a fixed-shape circuit. Also wires digest_id_extract into ClaimDigestStepCircuit so each claim's witnessed digestID is provably read from its own embedded bytes, cross-checked against the core circuit's witness by verify_and_check_binding (see binding_check_rejects_mismatched_digest_ids). Supersedes vega-mc-p256-v1-prover-key-r5 (deprecated). Still unpublished -- sha256_var/mso_splice/onehot_cursor are genuinely novel circuit code and have not had an independent security review yet, on top of the pre-existing ECDSA range-check gap."
+}

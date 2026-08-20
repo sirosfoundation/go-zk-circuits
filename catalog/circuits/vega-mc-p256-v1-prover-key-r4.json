@@ -6,7 +6,7 @@
     "org.iso.18013.5.1.mDL"
   ],
   "published": false,
-  "status": "active",
+  "status": "deprecated",
   "params": {
     "curve": "P-256",
     "maxClaimBytes": "64",
@@ -31,5 +31,6 @@
     "openSource": true
   },
   "publishedAt": "2026-08-19T23:28:31Z",
-  "notes": "Implements real selective disclosure (per-claim disclosed flag + masked plaintext, not just digest) -- see zk-cred-vega's ClaimDigestStepCircuit doc. Supersedes vega-mc-p256-v1-prover-key-r3 (deprecated, never published). Still unpublished -- pending a further security-review pass over this disclosure masking logic."
+  "deprecatedAt": "2026-08-20T14:46:55Z",
+  "notes": "Implements real selective disclosure (per-claim disclosed flag + masked plaintext, not just digest) -- see zk-cred-vega's ClaimDigestStepCircuit doc. Supersedes vega-mc-p256-v1-prover-key-r3 (deprecated, never published). Still unpublished -- pending a further security-review pass over this disclosure masking logic. | deprecated: Superseded: closed the real-interop gap (zk-cred-vega commit ad7425e) -- MAX_CLAIM_BYTES_V1 raised 64-\u003e128 and the digest is now computed over the claim's REAL (witnessed) length via a new sha256_var gadget instead of zero-padded, so this circuit can finally accept realistic salted ISO 18013-5 IssuerSignedItem bytes (79-95+ bytes) and match a real issuer's valueDigests computation. Changed both the step circuit's constraints and public-value shape (new real_len field)."
 }

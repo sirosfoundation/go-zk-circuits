@@ -1,0 +1,35 @@
+{
+  "id": "vega-mc-p256-v1-prover-key-r5",
+  "system": "vega-mc",
+  "systemVersion": "5",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": false,
+  "status": "active",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "128",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/2e04ee3a8c413b4b92659abf2c66e1aa42d59808b49137b0b5cbe980ac578364",
+    "hash": "sha256:2e04ee3a8c413b4b92659abf2c66e1aa42d59808b49137b0b5cbe980ac578364",
+    "size": 1883186,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:c89849decc93bad16dfe6fb9ff79a7186b893544024cbdf72f54ff9fd3b012ab",
+      "size": 68231202
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/ad7425e956e0d3a6e0175c6649da25bd6962afd7/src/sha256_var.rs",
+    "toolchain": "microsoft/vega-prover rev c0ee259, zk-cred-vega setup() (sirosfoundation/zk-cred-vega commit ad7425e)",
+    "license": "MPL-2.0",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-20T14:47:12Z",
+  "notes": "Closes the real-interop gap: MAX_CLAIM_BYTES_V1 raised 64-\u003e128, digest now computed over the claim's real (witnessed) length via a new sha256_var gadget instead of zero-padded -- see zk-cred-vega's sha256_var.rs module doc. Real, salted ISO 18013-5 IssuerSignedItem claims (79-95+ bytes) now fit and produce a digest matching a real issuer's valueDigests, proven end-to-end against a generated realistic test mdoc (test-vectors/mdl_4claims_mixed_disclosure.json). Supersedes vega-mc-p256-v1-prover-key-r4 (deprecated). Still unpublished -- sha256_var is genuinely novel circuit code and has not had an independent security review yet."
+}

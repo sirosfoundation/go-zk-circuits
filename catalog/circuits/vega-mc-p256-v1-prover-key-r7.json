@@ -1,0 +1,35 @@
+{
+  "id": "vega-mc-p256-v1-prover-key-r7",
+  "system": "vega-mc",
+  "systemVersion": "7",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": false,
+  "status": "active",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "128",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/f6f6c6516c6908077cf641b571cef362572c4cd806add964893d90dcd3d448dd",
+    "hash": "sha256:f6f6c6516c6908077cf641b571cef362572c4cd806add964893d90dcd3d448dd",
+    "size": 2783542,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:be985f283e70bf663827df1852d5e9e4b2190c8ba4103577d40d072ba1dcfe55",
+      "size": 109824282
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/246eee9d46299d477914379c625670d1079124a7/src/digest_id_extract.rs",
+    "toolchain": "microsoft/vega-prover rev c0ee259, zk-cred-vega setup() (sirosfoundation/zk-cred-vega commit 246eee9)",
+    "license": "MPL-2.0",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-21T20:58:10Z",
+  "notes": "Fixes a real under-constraint found while scoping an independent security review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). Still unpublished -- sha256_var/mso_splice/onehot_cursor/digest_id_extract remain unreviewed (see REVIEW-SCOPE.md), on top of the pre-existing ECDSA range-check gap."
+}

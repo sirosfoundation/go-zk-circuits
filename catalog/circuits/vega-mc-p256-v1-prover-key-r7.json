@@ -25,9 +25,9 @@
     }
   },
   "source": {
-    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/246eee9d46299d477914379c625670d1079124a7/src/digest_id_extract.rs",
-    "toolchain": "microsoft/vega-prover rev c0ee259, zk-cred-vega setup() (sirosfoundation/zk-cred-vega commit 246eee9)",
-    "license": "MPL-2.0",
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/v0.0.1/src/digest_id_extract.rs",
+    "toolchain": "microsoft/vega-prover rev c0ee259, zk-cred-vega setup() (sirosfoundation/zk-cred-vega v0.0.1)",
+    "license": "BSD-2-Clause",
     "openSource": true
   },
   "publishedAt": "2026-08-21T20:58:10Z",

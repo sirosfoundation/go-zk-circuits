@@ -5,7 +5,7 @@
   "docTypes": [
     "org.iso.18013.5.1.mDL"
   ],
-  "published": false,
+  "published": true,
   "status": "active",
   "params": {
     "curve": "P-256",
@@ -31,5 +31,5 @@
     "openSource": true
   },
   "publishedAt": "2026-08-21T20:58:10Z",
-  "notes": "Fixes a real under-constraint found while scoping an independent security review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). Still unpublished -- sha256_var/mso_splice/onehot_cursor/digest_id_extract remain unreviewed (see REVIEW-SCOPE.md), on top of the pre-existing ECDSA range-check gap."
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Fixes a real under-constraint found while scoping that review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). | publish: cleanup: consolidate note text"
 }

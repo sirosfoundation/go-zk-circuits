@@ -1,0 +1,35 @@
+{
+  "id": "vega-mc-p256-v1-prover-key-r10",
+  "system": "vega-mc",
+  "systemVersion": "10",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": true,
+  "status": "active",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "176",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/e547176a371da1c39c70ddf823324212a71b3fb3e44805967eac463208e3fb3c",
+    "hash": "sha256:e547176a371da1c39c70ddf823324212a71b3fb3e44805967eac463208e3fb3c",
+    "size": 2721860,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:5abd8d1343fe5201cd0f3e3e6b0a21153009e81262e886aca1fbe2595893b57b",
+      "size": 107811922
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/751fc0b/src/lib.rs",
+    "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @751fc0b)",
+    "license": "BSD-2-Clause",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-27T08:56:13Z",
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r9: fixed digest_id_extract's DIGEST_ID_OFFSET_BYTES for canonical CBOR order (random(32B) precedes digestID in vc's real per-claim encoding, not CDDL declaration order) - a second, independent root cause of InvalidSumcheckProof alongside r9's mso.rs fix, confirmed by reproducing a real device's exact captured witness end-to-end in pure Rust. Changes circuit constraint wiring, so r10 keys are not interchangeable with r9's."
+}

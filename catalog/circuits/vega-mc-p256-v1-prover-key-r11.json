@@ -6,7 +6,7 @@
     "org.iso.18013.5.1.mDL"
   ],
   "published": true,
-  "status": "active",
+  "status": "deprecated",
   "params": {
     "curve": "P-256",
     "maxClaimBytes": "176",
@@ -31,5 +31,6 @@
     "openSource": true
   },
   "publishedAt": "2026-08-27T12:16:25Z",
-  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r10: independent human review flagged that ClaimDigestStepCircuit::public_values exposed an undisclosed claim's raw SHA-256 digest publicly regardless of disclosure - a real cross-presentation correlation leak. Both circuits now expose SHA256(digest || nonce) instead (nonce fresh per presentation); the step\u003c-\u003ecore binding check moved from reconstructing the real MSO z from raw digests to a direct per-slot blinded-digest comparison, which also let the previously-exposed z itself stop being public (it was also a stable per-credential value). Also enables LTO for release builds (~5% perf) and widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 for a real 136-byte PID claim seen in live testing. This changes the circuit's constraint wiring and public-value shape, so r10 keys/proofs are not interchangeable with r11's."
+  "deprecatedAt": "2026-08-27T20:53:36Z",
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r10: independent human review flagged that ClaimDigestStepCircuit::public_values exposed an undisclosed claim's raw SHA-256 digest publicly regardless of disclosure - a real cross-presentation correlation leak. Both circuits now expose SHA256(digest || nonce) instead (nonce fresh per presentation); the step\u003c-\u003ecore binding check moved from reconstructing the real MSO z from raw digests to a direct per-slot blinded-digest comparison, which also let the previously-exposed z itself stop being public (it was also a stable per-credential value). Also enables LTO for release builds (~5% perf) and widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 for a real 136-byte PID claim seen in live testing. This changes the circuit's constraint wiring and public-value shape, so r10 keys/proofs are not interchangeable with r11's. | deprecated: Superseded by r12: circuit revision shrinking the blinding nonce to 23 bytes (one SHA-256 block instead of two), removing the claim plaintext from public IO (it now travels beside the proof, bound by the blinded digest, as BBS and Longfellow both do), and masking real_len for undisclosed claims to stop an item's length leaking information about its hidden value. r11 also predates the vega-prover 2a7dcb3 pin. See sirosfoundation/zk-cred-vega 43c18bf."
 }

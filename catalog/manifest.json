@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-08-27T21:06:44Z",
+  "generatedAt": "2026-08-27T21:46:44Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -406,6 +406,42 @@
       "notes": "Publication authorized via the go-zk-circuits PR/commit that set published=true on this entry — see this file's git history for the authorization record, rather than restating it here. No commit SHA exists for these bytes independently of this catalog: they are sourced from a private, unversioned fork copy with no public repository URL."
     },
     {
+      "id": "vega-mc-p256-v1-prover-key-r11",
+      "system": "vega-mc",
+      "systemVersion": "11",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "deprecated",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "prover"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/55707e6f2f31777e3280b6a7c5d38926b82d10afdde420a075b5a6e66272effa",
+        "hash": "sha256:55707e6f2f31777e3280b6a7c5d38926b82d10afdde420a075b5a6e66272effa",
+        "size": 4478648,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:7d3c7961f3c48d021ff63d5f4869138e79e5a30dd7007e91bae0f52ccb2db9b8",
+          "size": 157061002
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/0592680/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega main @0592680)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-27T12:16:25Z",
+      "deprecatedAt": "2026-08-27T21:06:30Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r10: independent human review flagged that ClaimDigestStepCircuit::public_values exposed an undisclosed claim's raw SHA-256 digest publicly regardless of disclosure - a real cross-presentation correlation leak. Both circuits now expose SHA256(digest || nonce) instead (nonce fresh per presentation); the step\u003c-\u003ecore binding check moved from reconstructing the real MSO z from raw digests to a direct per-slot blinded-digest comparison, which also let the previously-exposed z itself stop being public (it was also a stable per-credential value). Also enables LTO for release builds (~5% perf) and widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 for a real 136-byte PID claim seen in live testing. This changes the circuit's constraint wiring and public-value shape, so r10 keys/proofs are not interchangeable with r11's. | deprecated: Superseded by r12: circuit revision shrinking the blinding nonce to 23 bytes (one SHA-256 block instead of two), removing the claim plaintext from public IO (it now travels beside the proof, bound by the blinded digest, as BBS and Longfellow both do), and masking real_len for undisclosed claims to stop an item's length leaking information about its hidden value. r11 also predates the vega-prover 2a7dcb3 pin. See sirosfoundation/zk-cred-vega 43c18bf. | reclassified 2026-08-27: status revoked -\u003e deprecated, and re-published alongside r12. The revocation over-stated the defect: r11 leaks real_len for undisclosed claims, so an item's byte length narrows its hidden value -- a real but minor privacy leak, not a soundness break, and not in the class of r2 (ECDSA forgery) or r10 (raw digests exposed across presentations, linkable). r11 is kept published as a migration target because r12 changes verify() incompatibly (the disclosed bytes are no longer public values of the proof and must be supplied to verification). USE r12 FOR ANYTHING NEW; use r11 only while migrating, and note the real_len leak applies while you do. This reversal was applied by editing the entry directly -- circuitctl deliberately refuses to reverse a revocation. | publish: Re-published alongside r12 as a migration target: r12 changes verify() incompatibly (disclosed bytes are no longer public values and must be supplied to verification), so consumers need a working circuit while they migrate. r11's real_len leak for undisclosed claims still applies -- use r12 for anything new."
+    },
+    {
       "id": "vega-mc-p256-v1-prover-key-r12",
       "system": "vega-mc",
       "systemVersion": "12",
@@ -439,6 +475,42 @@
       },
       "publishedAt": "2026-08-27T20:53:50Z",
       "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code and has not had an independent security review -- do not rely on it for real relying-party trust decisions. Circuit revision over r11 with three measured changes: (1) the digest-blinding nonce is 23 bytes rather than 32, so blind(digest||nonce) fits a single SHA-256 block (44,874 -\u003e 25,589 constraints, x8 blindings per presentation); (2) a claim's plaintext is no longer a public value -- the disclosed bytes travel beside the proof and verification binds them by re-deriving their blinded digest, the same model BBS and Longfellow use -- cutting step public values 1,705 -\u003e 297 and the proof 415kB -\u003e 233kB; (3) real_len is masked to zero for undisclosed claims, closing a leak where an item's byte length narrowed its hidden value. Net: 1,014,943 -\u003e 842,591 constraints, prove 468ms -\u003e 351ms, verify 114ms -\u003e 83ms. Also picks up the vega-prover 2a7dcb3 pin, which r11 predates. BREAKING: verify() now requires the disclosed bytes as an argument on both FFI surfaces."
+    },
+    {
+      "id": "vega-mc-p256-v1-verifier-key-r11",
+      "system": "vega-mc",
+      "systemVersion": "11",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "deprecated",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "verifier"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/147f87e67aa830aec5d289a39d1365979e29248a31b582f5734635b014bfb690",
+        "hash": "sha256:147f87e67aa830aec5d289a39d1365979e29248a31b582f5734635b014bfb690",
+        "size": 4485797,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:726736eb9410999638c00ea071ac270fda5f826053946503f09385a1732f3313",
+          "size": 157129716
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/0592680/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega main @0592680)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-27T12:16:33Z",
+      "deprecatedAt": "2026-08-27T21:06:30Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r10: independent human review flagged that ClaimDigestStepCircuit::public_values exposed an undisclosed claim's raw SHA-256 digest publicly regardless of disclosure - a real cross-presentation correlation leak. Both circuits now expose SHA256(digest || nonce) instead (nonce fresh per presentation); the step\u003c-\u003ecore binding check moved from reconstructing the real MSO z from raw digests to a direct per-slot blinded-digest comparison, which also let the previously-exposed z itself stop being public (it was also a stable per-credential value). Also enables LTO for release builds (~5% perf) and widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 for a real 136-byte PID claim seen in live testing. This changes the circuit's constraint wiring and public-value shape, so r10 keys/proofs are not interchangeable with r11's. | deprecated: Superseded by r12: circuit revision shrinking the blinding nonce to 23 bytes (one SHA-256 block instead of two), removing the claim plaintext from public IO (it now travels beside the proof, bound by the blinded digest, as BBS and Longfellow both do), and masking real_len for undisclosed claims to stop an item's length leaking information about its hidden value. r11 also predates the vega-prover 2a7dcb3 pin. See sirosfoundation/zk-cred-vega 43c18bf. | reclassified 2026-08-27: status revoked -\u003e deprecated, and re-published alongside r12. The revocation over-stated the defect: r11 leaks real_len for undisclosed claims, so an item's byte length narrows its hidden value -- a real but minor privacy leak, not a soundness break, and not in the class of r2 (ECDSA forgery) or r10 (raw digests exposed across presentations, linkable). r11 is kept published as a migration target because r12 changes verify() incompatibly (the disclosed bytes are no longer public values of the proof and must be supplied to verification). USE r12 FOR ANYTHING NEW; use r11 only while migrating, and note the real_len leak applies while you do. This reversal was applied by editing the entry directly -- circuitctl deliberately refuses to reverse a revocation. | publish: Re-published alongside r12 as a migration target: r12 changes verify() incompatibly (disclosed bytes are no longer public values and must be supplied to verification), so consumers need a working circuit while they migrate. r11's real_len leak for undisclosed claims still applies -- use r12 for anything new."
     },
     {
       "id": "vega-mc-p256-v1-verifier-key-r12",

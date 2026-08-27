@@ -1,0 +1,35 @@
+{
+  "id": "vega-mc-p256-v1-prover-key-r11",
+  "system": "vega-mc",
+  "systemVersion": "11",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": true,
+  "status": "active",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "176",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/55707e6f2f31777e3280b6a7c5d38926b82d10afdde420a075b5a6e66272effa",
+    "hash": "sha256:55707e6f2f31777e3280b6a7c5d38926b82d10afdde420a075b5a6e66272effa",
+    "size": 4478648,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:7d3c7961f3c48d021ff63d5f4869138e79e5a30dd7007e91bae0f52ccb2db9b8",
+      "size": 157061002
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/0592680/src/lib.rs",
+    "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega main @0592680)",
+    "license": "BSD-2-Clause",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-27T12:16:25Z",
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r10: independent human review flagged that ClaimDigestStepCircuit::public_values exposed an undisclosed claim's raw SHA-256 digest publicly regardless of disclosure - a real cross-presentation correlation leak. Both circuits now expose SHA256(digest || nonce) instead (nonce fresh per presentation); the step\u003c-\u003ecore binding check moved from reconstructing the real MSO z from raw digests to a direct per-slot blinded-digest comparison, which also let the previously-exposed z itself stop being public (it was also a stable per-credential value). Also enables LTO for release builds (~5% perf) and widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 for a real 136-byte PID claim seen in live testing. This changes the circuit's constraint wiring and public-value shape, so r10 keys/proofs are not interchangeable with r11's."
+}

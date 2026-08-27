@@ -1,0 +1,35 @@
+{
+  "id": "vega-mc-p256-v1-prover-key-r12",
+  "system": "vega-mc",
+  "systemVersion": "12",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": true,
+  "status": "active",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "176",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/1201a20f52724d5cf67fc2f6c5a3c04499545f65464fb89db260ef50fbf5615b",
+    "hash": "sha256:1201a20f52724d5cf67fc2f6c5a3c04499545f65464fb89db260ef50fbf5615b",
+    "size": 3660237,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:b1f4853e2636c30078ffaa1c0fc817b6e096d877965926411fdc1f1eb993107e",
+      "size": 135776322
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/v0.0.5/src/lib.rs",
+    "toolchain": "sirosfoundation/vega-prover rev 2a7dcb3, zk-cred-vega setup() (sirosfoundation/zk-cred-vega v0.0.5)",
+    "license": "BSD-2-Clause",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-27T20:53:50Z",
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code and has not had an independent security review -- do not rely on it for real relying-party trust decisions. Circuit revision over r11 with three measured changes: (1) the digest-blinding nonce is 23 bytes rather than 32, so blind(digest||nonce) fits a single SHA-256 block (44,874 -\u003e 25,589 constraints, x8 blindings per presentation); (2) a claim's plaintext is no longer a public value -- the disclosed bytes travel beside the proof and verification binds them by re-deriving their blinded digest, the same model BBS and Longfellow use -- cutting step public values 1,705 -\u003e 297 and the proof 415kB -\u003e 233kB; (3) real_len is masked to zero for undisclosed claims, closing a leak where an item's byte length narrowed its hidden value. Net: 1,014,943 -\u003e 842,591 constraints, prove 468ms -\u003e 351ms, verify 114ms -\u003e 83ms. Also picks up the vega-prover 2a7dcb3 pin, which r11 predates. BREAKING: verify() now requires the disclosed bytes as an argument on both FFI surfaces."
+}

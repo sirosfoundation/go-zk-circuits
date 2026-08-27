@@ -5,7 +5,7 @@
   "docTypes": [
     "org.iso.18013.5.1.mDL"
   ],
-  "published": true,
+  "published": false,
   "status": "deprecated",
   "params": {
     "curve": "P-256",
@@ -32,5 +32,5 @@
   },
   "publishedAt": "2026-08-26T23:13:59Z",
   "deprecatedAt": "2026-08-27T08:03:27Z",
-  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r7: widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 after a real PID mdoc's IssuerSignedItemBytes (136 bytes) exceeded r7's budget during live end-to-end testing - no circuit-logic/constraint change, same digestID-binding fix r7 introduced. | deprecated: superseded by r9 (mso.rs field-order fix)"
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r7: widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 after a real PID mdoc's IssuerSignedItemBytes (136 bytes) exceeded r7's budget during live end-to-end testing - no circuit-logic/constraint change, same digestID-binding fix r7 introduced. | deprecated: superseded by r9 (mso.rs field-order fix) | unpublish: Unpublished: reconstructed the MSO with the wrong canonical-CBOR field order, so z never matched what a real issuer signed and every presentation failed verification."
 }

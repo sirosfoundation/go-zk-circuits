@@ -6,7 +6,7 @@
     "org.iso.18013.5.1.mDL"
   ],
   "published": true,
-  "status": "active",
+  "status": "deprecated",
   "params": {
     "curve": "P-256",
     "maxClaimBytes": "128",
@@ -31,5 +31,6 @@
     "openSource": true
   },
   "publishedAt": "2026-08-21T20:58:10Z",
-  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Fixes a real under-constraint found while scoping that review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). | publish: cleanup: consolidate note text"
+  "deprecatedAt": "2026-08-26T23:14:06Z",
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Fixes a real under-constraint found while scoping that review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). | publish: cleanup: consolidate note text | deprecated: Superseded by r8: MAX_VAR_MESSAGE_BYTES widened 128-\u003e176 (a real PID mdoc's IssuerSignedItemBytes at 136 bytes exceeded r7's budget)."
 }

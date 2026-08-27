@@ -1,0 +1,36 @@
+{
+  "id": "vega-mc-p256-v1-verifier-key-r10",
+  "system": "vega-mc",
+  "systemVersion": "10",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": true,
+  "status": "deprecated",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "176",
+    "numClaims": "4",
+    "role": "verifier"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/4ceaf3c716977597179de4a0c78418ca03d75e93abc9ab37179b1b529d23b63d",
+    "hash": "sha256:4ceaf3c716977597179de4a0c78418ca03d75e93abc9ab37179b1b529d23b63d",
+    "size": 2728550,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:589df10c95b9fbf69e6ee255fbf9ba2c0b2d2012523c72b668ab2ef28245fc51",
+      "size": 107880636
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/751fc0b/src/lib.rs",
+    "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @751fc0b)",
+    "license": "BSD-2-Clause",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-27T08:56:24Z",
+  "deprecatedAt": "2026-08-27T12:16:37Z",
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r9: fixed digest_id_extract's DIGEST_ID_OFFSET_BYTES for canonical CBOR order (random(32B) precedes digestID in vc's real per-claim encoding, not CDDL declaration order) - a second, independent root cause of InvalidSumcheckProof alongside r9's mso.rs fix, confirmed by reproducing a real device's exact captured witness end-to-end in pure Rust. Changes circuit constraint wiring, so r10 keys are not interchangeable with r9's. | deprecated: superseded by r11 (digest-concealment privacy fix)"
+}

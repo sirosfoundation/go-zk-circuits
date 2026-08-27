@@ -1,0 +1,36 @@
+{
+  "id": "vega-mc-p256-v1-prover-key-r9",
+  "system": "vega-mc",
+  "systemVersion": "9",
+  "docTypes": [
+    "org.iso.18013.5.1.mDL"
+  ],
+  "published": true,
+  "status": "deprecated",
+  "params": {
+    "curve": "P-256",
+    "maxClaimBytes": "176",
+    "numClaims": "4",
+    "role": "prover"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/6b9f200d6946d61f05be8f5b0528dd56662321a53cab397eb4c90e2e68b02267",
+    "hash": "sha256:6b9f200d6946d61f05be8f5b0528dd56662321a53cab397eb4c90e2e68b02267",
+    "size": 2721863,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:4c44d1f3acc1148072aa310fe819507669ccfecd05040514c6808f43df1fdb78",
+      "size": 107811922
+    }
+  },
+  "source": {
+    "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/ae48d36/src/lib.rs",
+    "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @ae48d36)",
+    "license": "BSD-2-Clause",
+    "openSource": true
+  },
+  "publishedAt": "2026-08-27T08:03:18Z",
+  "deprecatedAt": "2026-08-27T08:56:24Z",
+  "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r8: fixed mso.rs's MSO field ordering to match real vc-issued MSOs (RFC 7049 canonical CBOR: docType,version,validityInfo,valueDigests,deviceKeyInfo,digestAlgorithm), not the CDDL-declaration order r8 and earlier assumed - the wrong order silently produced a plausible-but-wrong z, causing every real end-to-end presentation to fail InvalidSumcheckProof regardless of docType/transcript correctness. This changes the circuit's constraint wiring, so r8 keys are incompatible with proofs generated against this key and vice versa. | deprecated: superseded by r10 (digest_id_extract offset fix)"
+}

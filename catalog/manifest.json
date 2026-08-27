@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-08-25T19:53:25Z",
+  "generatedAt": "2026-08-27T12:16:37Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -406,6 +406,77 @@
       "notes": "Publication authorized via the go-zk-circuits PR/commit that set published=true on this entry — see this file's git history for the authorization record, rather than restating it here. No commit SHA exists for these bytes independently of this catalog: they are sourced from a private, unversioned fork copy with no public repository URL."
     },
     {
+      "id": "vega-mc-p256-v1-prover-key-r10",
+      "system": "vega-mc",
+      "systemVersion": "10",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "deprecated",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "prover"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/e547176a371da1c39c70ddf823324212a71b3fb3e44805967eac463208e3fb3c",
+        "hash": "sha256:e547176a371da1c39c70ddf823324212a71b3fb3e44805967eac463208e3fb3c",
+        "size": 2721860,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:5abd8d1343fe5201cd0f3e3e6b0a21153009e81262e886aca1fbe2595893b57b",
+          "size": 107811922
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/751fc0b/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @751fc0b)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-27T08:56:13Z",
+      "deprecatedAt": "2026-08-27T12:16:37Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r9: fixed digest_id_extract's DIGEST_ID_OFFSET_BYTES for canonical CBOR order (random(32B) precedes digestID in vc's real per-claim encoding, not CDDL declaration order) - a second, independent root cause of InvalidSumcheckProof alongside r9's mso.rs fix, confirmed by reproducing a real device's exact captured witness end-to-end in pure Rust. Changes circuit constraint wiring, so r10 keys are not interchangeable with r9's. | deprecated: superseded by r11 (digest-concealment privacy fix)"
+    },
+    {
+      "id": "vega-mc-p256-v1-prover-key-r11",
+      "system": "vega-mc",
+      "systemVersion": "11",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "active",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "prover"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/55707e6f2f31777e3280b6a7c5d38926b82d10afdde420a075b5a6e66272effa",
+        "hash": "sha256:55707e6f2f31777e3280b6a7c5d38926b82d10afdde420a075b5a6e66272effa",
+        "size": 4478648,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:7d3c7961f3c48d021ff63d5f4869138e79e5a30dd7007e91bae0f52ccb2db9b8",
+          "size": 157061002
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/0592680/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega main @0592680)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-27T12:16:25Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r10: independent human review flagged that ClaimDigestStepCircuit::public_values exposed an undisclosed claim's raw SHA-256 digest publicly regardless of disclosure - a real cross-presentation correlation leak. Both circuits now expose SHA256(digest || nonce) instead (nonce fresh per presentation); the step\u003c-\u003ecore binding check moved from reconstructing the real MSO z from raw digests to a direct per-slot blinded-digest comparison, which also let the previously-exposed z itself stop being public (it was also a stable per-credential value). Also enables LTO for release builds (~5% perf) and widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 for a real 136-byte PID claim seen in live testing. This changes the circuit's constraint wiring and public-value shape, so r10 keys/proofs are not interchangeable with r11's."
+    },
+    {
       "id": "vega-mc-p256-v1-prover-key-r7",
       "system": "vega-mc",
       "systemVersion": "7",
@@ -413,7 +484,7 @@
         "org.iso.18013.5.1.mDL"
       ],
       "published": true,
-      "status": "active",
+      "status": "deprecated",
       "params": {
         "curve": "P-256",
         "maxClaimBytes": "128",
@@ -438,7 +509,151 @@
         "openSource": true
       },
       "publishedAt": "2026-08-21T20:58:10Z",
-      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Fixes a real under-constraint found while scoping that review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). | publish: cleanup: consolidate note text"
+      "deprecatedAt": "2026-08-26T23:14:06Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Fixes a real under-constraint found while scoping that review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). | publish: cleanup: consolidate note text | deprecated: Superseded by r8: MAX_VAR_MESSAGE_BYTES widened 128-\u003e176 (a real PID mdoc's IssuerSignedItemBytes at 136 bytes exceeded r7's budget)."
+    },
+    {
+      "id": "vega-mc-p256-v1-prover-key-r8",
+      "system": "vega-mc",
+      "systemVersion": "8",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "deprecated",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "prover"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/0cab24a2433637b1395e5919a0e6d7d1e6990245573d5ee6ffbd27e13523f9a2",
+        "hash": "sha256:0cab24a2433637b1395e5919a0e6d7d1e6990245573d5ee6ffbd27e13523f9a2",
+        "size": 2787417,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:4cdbb74f6599af538f3496682a48125775533b80ff68a40771f4db7256ec7085",
+          "size": 110396842
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/af0dfd1/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @af0dfd1)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-26T23:13:59Z",
+      "deprecatedAt": "2026-08-27T08:03:27Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r7: widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 after a real PID mdoc's IssuerSignedItemBytes (136 bytes) exceeded r7's budget during live end-to-end testing - no circuit-logic/constraint change, same digestID-binding fix r7 introduced. | deprecated: superseded by r9 (mso.rs field-order fix)"
+    },
+    {
+      "id": "vega-mc-p256-v1-prover-key-r9",
+      "system": "vega-mc",
+      "systemVersion": "9",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "deprecated",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "prover"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/6b9f200d6946d61f05be8f5b0528dd56662321a53cab397eb4c90e2e68b02267",
+        "hash": "sha256:6b9f200d6946d61f05be8f5b0528dd56662321a53cab397eb4c90e2e68b02267",
+        "size": 2721863,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:4c44d1f3acc1148072aa310fe819507669ccfecd05040514c6808f43df1fdb78",
+          "size": 107811922
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/ae48d36/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @ae48d36)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-27T08:03:18Z",
+      "deprecatedAt": "2026-08-27T08:56:24Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r8: fixed mso.rs's MSO field ordering to match real vc-issued MSOs (RFC 7049 canonical CBOR: docType,version,validityInfo,valueDigests,deviceKeyInfo,digestAlgorithm), not the CDDL-declaration order r8 and earlier assumed - the wrong order silently produced a plausible-but-wrong z, causing every real end-to-end presentation to fail InvalidSumcheckProof regardless of docType/transcript correctness. This changes the circuit's constraint wiring, so r8 keys are incompatible with proofs generated against this key and vice versa. | deprecated: superseded by r10 (digest_id_extract offset fix)"
+    },
+    {
+      "id": "vega-mc-p256-v1-verifier-key-r10",
+      "system": "vega-mc",
+      "systemVersion": "10",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "deprecated",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "verifier"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/4ceaf3c716977597179de4a0c78418ca03d75e93abc9ab37179b1b529d23b63d",
+        "hash": "sha256:4ceaf3c716977597179de4a0c78418ca03d75e93abc9ab37179b1b529d23b63d",
+        "size": 2728550,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:589df10c95b9fbf69e6ee255fbf9ba2c0b2d2012523c72b668ab2ef28245fc51",
+          "size": 107880636
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/751fc0b/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @751fc0b)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-27T08:56:24Z",
+      "deprecatedAt": "2026-08-27T12:16:37Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r9: fixed digest_id_extract's DIGEST_ID_OFFSET_BYTES for canonical CBOR order (random(32B) precedes digestID in vc's real per-claim encoding, not CDDL declaration order) - a second, independent root cause of InvalidSumcheckProof alongside r9's mso.rs fix, confirmed by reproducing a real device's exact captured witness end-to-end in pure Rust. Changes circuit constraint wiring, so r10 keys are not interchangeable with r9's. | deprecated: superseded by r11 (digest-concealment privacy fix)"
+    },
+    {
+      "id": "vega-mc-p256-v1-verifier-key-r11",
+      "system": "vega-mc",
+      "systemVersion": "11",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "active",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "verifier"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/147f87e67aa830aec5d289a39d1365979e29248a31b582f5734635b014bfb690",
+        "hash": "sha256:147f87e67aa830aec5d289a39d1365979e29248a31b582f5734635b014bfb690",
+        "size": 4485797,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:726736eb9410999638c00ea071ac270fda5f826053946503f09385a1732f3313",
+          "size": 157129716
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/0592680/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega main @0592680)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-27T12:16:33Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r10: independent human review flagged that ClaimDigestStepCircuit::public_values exposed an undisclosed claim's raw SHA-256 digest publicly regardless of disclosure - a real cross-presentation correlation leak. Both circuits now expose SHA256(digest || nonce) instead (nonce fresh per presentation); the step\u003c-\u003ecore binding check moved from reconstructing the real MSO z from raw digests to a direct per-slot blinded-digest comparison, which also let the previously-exposed z itself stop being public (it was also a stable per-credential value). Also enables LTO for release builds (~5% perf) and widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 for a real 136-byte PID claim seen in live testing. This changes the circuit's constraint wiring and public-value shape, so r10 keys/proofs are not interchangeable with r11's."
     },
     {
       "id": "vega-mc-p256-v1-verifier-key-r7",
@@ -448,7 +663,7 @@
         "org.iso.18013.5.1.mDL"
       ],
       "published": true,
-      "status": "active",
+      "status": "deprecated",
       "params": {
         "curve": "P-256",
         "maxClaimBytes": "128",
@@ -473,7 +688,80 @@
         "openSource": true
       },
       "publishedAt": "2026-08-21T20:58:10Z",
-      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Fixes a real under-constraint found while scoping that review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). | publish: cleanup: consolidate note text"
+      "deprecatedAt": "2026-08-26T23:14:06Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Fixes a real under-constraint found while scoping that review: digest_id_extract's value-byte mapping is right-aligned, so for CBOR uint length classes 0/1/2 the high-order bytes of the exposed digestID were free witness variables, and both range checks went vacuous (gated by a different class's selector). A prover generating its own witness could select class 1 to match real bytes 0x18 0x1A (digestID 26) while exposing 0x0ABBCC1A -- defeating the digestID-to-claim-bytes binding r6 was meant to establish. Fixed by constraining every value byte the selected class does not encode to zero, per-class, with a regression test that tampers with the witness directly (verified to fail without the fix). Likely fail-safe rather than forgeable (a conformant verifier rejects), but it broke the intended guarantee. Supersedes r6 (deprecated). | publish: cleanup: consolidate note text | deprecated: Superseded by r8: MAX_VAR_MESSAGE_BYTES widened 128-\u003e176 (a real PID mdoc's IssuerSignedItemBytes at 136 bytes exceeded r7's budget)."
+    },
+    {
+      "id": "vega-mc-p256-v1-verifier-key-r8",
+      "system": "vega-mc",
+      "systemVersion": "8",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "deprecated",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "verifier"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/e1da22b8dbda6245de05fc1252e933534bb764e0aea168a21bda453603541c2d",
+        "hash": "sha256:e1da22b8dbda6245de05fc1252e933534bb764e0aea168a21bda453603541c2d",
+        "size": 2797031,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:042e69dd5db2521f7ac693dfbe7760da4f525f8dbcb3b2ff1065cf1d1628786e",
+          "size": 110465556
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/af0dfd1/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @af0dfd1)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-26T23:13:59Z",
+      "deprecatedAt": "2026-08-27T08:03:27Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r7: widens MAX_VAR_MESSAGE_BYTES 128-\u003e176 after a real PID mdoc's IssuerSignedItemBytes (136 bytes) exceeded r7's budget during live end-to-end testing - no circuit-logic/constraint change, same digestID-binding fix r7 introduced. | deprecated: superseded by r9 (mso.rs field-order fix)"
+    },
+    {
+      "id": "vega-mc-p256-v1-verifier-key-r9",
+      "system": "vega-mc",
+      "systemVersion": "9",
+      "docTypes": [
+        "org.iso.18013.5.1.mDL"
+      ],
+      "published": true,
+      "status": "deprecated",
+      "params": {
+        "curve": "P-256",
+        "maxClaimBytes": "176",
+        "numClaims": "4",
+        "role": "verifier"
+      },
+      "artifact": {
+        "url": "/v1/artifacts/sha256/0a00251c55bba52ca75fe10a3bacd5fd7f862f84c8dd07ebf3d3a4412a07aa1c",
+        "hash": "sha256:0a00251c55bba52ca75fe10a3bacd5fd7f862f84c8dd07ebf3d3a4412a07aa1c",
+        "size": 2728550,
+        "compression": "zstd",
+        "mediaType": "application/zstd",
+        "uncompressed": {
+          "hash": "sha256:dddc69c437d344643344c0a27a289dd7961c2d227530b01ba16e511317965c75",
+          "size": 107880636
+        }
+      },
+      "source": {
+        "origin": "https://github.com/sirosfoundation/zk-cred-vega/blob/ae48d36/src/lib.rs",
+        "toolchain": "microsoft/vega-prover rev 15fa721 (sirosfoundation fork), zk-cred-vega setup() (sirosfoundation/zk-cred-vega feat/go-cabi-verify @ae48d36)",
+        "license": "BSD-2-Clause",
+        "openSource": true
+      },
+      "publishedAt": "2026-08-27T08:03:27Z",
+      "deprecatedAt": "2026-08-27T08:56:24Z",
+      "notes": "PUBLISHED FOR EARLY TESTING ONLY: this circuit is unreviewed, AI-generated code. The crate's planned expert security review (sha256_var/mso_splice/onehot_cursor/digest_id_extract, plus a known ECDSA range-check gap) has not landed. Do not treat as vouched-for or production-ready; do not rely on it for real relying-party trust decisions. | Supersedes r8: fixed mso.rs's MSO field ordering to match real vc-issued MSOs (RFC 7049 canonical CBOR: docType,version,validityInfo,valueDigests,deviceKeyInfo,digestAlgorithm), not the CDDL-declaration order r8 and earlier assumed - the wrong order silently produced a plausible-but-wrong z, causing every real end-to-end presentation to fail InvalidSumcheckProof regardless of docType/transcript correctness. This changes the circuit's constraint wiring, so r8 keys are incompatible with proofs generated against this key and vice versa. | deprecated: superseded by r10 (digest_id_extract offset fix)"
     }
   ],
   "next": null

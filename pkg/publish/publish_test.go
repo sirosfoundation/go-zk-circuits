@@ -201,7 +201,8 @@ func TestAdd_SystemVersionFlagPublishesNonLongfellowSystem(t *testing.T) {
 		ID:            "vega-mc-p256-v1-prover-key",
 		Origin:        "o",
 		ExplicitParams: map[string]string{
-			"role": "prover",
+			"role":      "prover",
+			"saltBytes": "32",
 		},
 	})
 	require.NoError(t, err)

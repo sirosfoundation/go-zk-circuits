@@ -11,6 +11,7 @@
     "curve": "P-256",
     "maxClaimBytes": "176",
     "numClaims": "4",
+    "saltBytes": "32",
     "role": "verifier"
   },
   "artifact": {

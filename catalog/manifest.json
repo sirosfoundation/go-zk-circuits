@@ -418,7 +418,8 @@
         "curve": "P-256",
         "maxClaimBytes": "176",
         "numClaims": "4",
-        "role": "prover"
+        "role": "prover",
+        "saltBytes": "32"
       },
       "artifact": {
         "url": "/v1/artifacts/sha256/55707e6f2f31777e3280b6a7c5d38926b82d10afdde420a075b5a6e66272effa",
@@ -454,7 +455,8 @@
         "curve": "P-256",
         "maxClaimBytes": "176",
         "numClaims": "4",
-        "role": "prover"
+        "role": "prover",
+        "saltBytes": "32"
       },
       "artifact": {
         "url": "/v1/artifacts/sha256/1201a20f52724d5cf67fc2f6c5a3c04499545f65464fb89db260ef50fbf5615b",
@@ -489,7 +491,8 @@
         "curve": "P-256",
         "maxClaimBytes": "176",
         "numClaims": "4",
-        "role": "verifier"
+        "role": "verifier",
+        "saltBytes": "32"
       },
       "artifact": {
         "url": "/v1/artifacts/sha256/147f87e67aa830aec5d289a39d1365979e29248a31b582f5734635b014bfb690",
@@ -525,7 +528,8 @@
         "curve": "P-256",
         "maxClaimBytes": "176",
         "numClaims": "4",
-        "role": "verifier"
+        "role": "verifier",
+        "saltBytes": "32"
       },
       "artifact": {
         "url": "/v1/artifacts/sha256/c18047044331c6a8f15b2f7c69f8412eee0c36b1352f496ee8ee8ec4d9bf10c1",

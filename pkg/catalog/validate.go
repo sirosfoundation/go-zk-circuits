@@ -2,7 +2,9 @@ package catalog
 
 import (
 	"fmt"
+	"math"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -85,6 +87,9 @@ func ValidateEntry(e *CircuitDescriptor) error {
 	if err := validateParams(e.Params); err != nil {
 		return fmt.Errorf("params: %w", err)
 	}
+	if err := validateVegaParams(e); err != nil {
+		return fmt.Errorf("params: %w", err)
+	}
 	if e.Artifact != nil {
 		if err := validateArtifact(e.Artifact); err != nil {
 			return fmt.Errorf("artifact: %w", err)
@@ -107,6 +112,46 @@ func validateParams(params map[string]any) error {
 		default:
 			return fmt.Errorf("param %q has non-scalar value of type %T (only string/number/boolean allowed)", k, v)
 		}
+	}
+	return nil
+}
+
+// validateVegaParams requires every published, non-revoked vega-mc entry to
+// declare saltBytes: the length of the mdoc IssuerSignedItem "random" salt
+// the circuit build was compiled for (zk-cred-vega's DIGEST_ID_OFFSET_BYTES
+// hardcodes it). A mismatching issuer fails every claim with
+// InvalidSumcheckProof, so consumers must be able to resolve it from the
+// catalog rather than a hand-copied number.
+func validateVegaParams(e *CircuitDescriptor) error {
+	if e.System != "vega-mc" || !e.Published || e.Status == StatusRevoked {
+		return nil
+	}
+	v, ok := e.Params["saltBytes"]
+	if !ok {
+		return fmt.Errorf("saltBytes is required for published vega-mc entries")
+	}
+	var n int64
+	switch t := v.(type) {
+	case string:
+		parsed, err := strconv.ParseInt(t, 10, 64)
+		if err != nil {
+			return fmt.Errorf("saltBytes %q is not a decimal integer", t)
+		}
+		n = parsed
+	case float64:
+		if t != math.Trunc(t) || t > math.MaxInt32 || t < math.MinInt32 {
+			return fmt.Errorf("saltBytes %v is not an integer", t)
+		}
+		n = int64(t)
+	case int:
+		n = int64(t)
+	case int64:
+		n = t
+	default:
+		return fmt.Errorf("saltBytes has unsupported type %T", v)
+	}
+	if n <= 0 {
+		return fmt.Errorf("saltBytes must be positive, got %d", n)
 	}
 	return nil
 }

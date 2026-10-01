@@ -186,3 +186,24 @@ func TestLoadManifestFile_InvalidJSON(t *testing.T) {
 	_, err := LoadManifestFile(fsys, "catalog/manifest.json")
 	require.Error(t, err)
 }
+
+func TestValidateEntry_VegaRequiresSaltBytes(t *testing.T) {
+	e := sampleEntry("vega-x")
+	e.System = "vega-mc"
+	e.Published = true
+	e.Status = StatusActive
+	require.Error(t, ValidateEntry(&e), "missing saltBytes")
+	e.Params["saltBytes"] = "abc"
+	require.Error(t, ValidateEntry(&e), "non-numeric saltBytes")
+	e.Params["saltBytes"] = "0"
+	require.Error(t, ValidateEntry(&e), "non-positive saltBytes")
+	e.Params["saltBytes"] = "32"
+	require.NoError(t, ValidateEntry(&e))
+	delete(e.Params, "saltBytes")
+	e.Published = false
+	require.NoError(t, ValidateEntry(&e), "unpublished entries are exempt")
+	e.Published = true
+	e.Status = StatusRevoked
+	e.DeprecatedAt = "2026-08-13T21:40:11Z"
+	require.NoError(t, ValidateEntry(&e), "revoked entries are exempt")
+}

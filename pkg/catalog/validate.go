@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"fmt"
+	"math"
 	"regexp"
 	"strconv"
 	"time"
@@ -138,6 +139,9 @@ func validateVegaParams(e *CircuitDescriptor) error {
 		}
 		n = parsed
 	case float64:
+		if t != math.Trunc(t) || t > math.MaxInt32 || t < math.MinInt32 {
+			return fmt.Errorf("saltBytes %v is not an integer", t)
+		}
 		n = int64(t)
 	case int:
 		n = int64(t)

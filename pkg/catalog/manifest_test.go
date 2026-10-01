@@ -197,6 +197,10 @@ func TestValidateEntry_VegaRequiresSaltBytes(t *testing.T) {
 	require.Error(t, ValidateEntry(&e), "non-numeric saltBytes")
 	e.Params["saltBytes"] = "0"
 	require.Error(t, ValidateEntry(&e), "non-positive saltBytes")
+	e.Params["saltBytes"] = 32.5
+	require.Error(t, ValidateEntry(&e), "fractional saltBytes")
+	e.Params["saltBytes"] = float64(32)
+	require.NoError(t, ValidateEntry(&e), "JSON-decoded integral number")
 	e.Params["saltBytes"] = "32"
 	require.NoError(t, ValidateEntry(&e))
 	delete(e.Params, "saltBytes")

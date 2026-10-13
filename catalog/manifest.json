@@ -439,7 +439,7 @@
         "openSource": false
       },
       "publishedAt": "2026-10-13T10:23:10Z",
-      "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits. UNREVIEWED: do not rely on these circuits for real relying-party trust decisions."
+      "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits."
     },
     {
       "id": "nymauth-longfellow-sdjwt-v1",
@@ -475,7 +475,7 @@
         "openSource": false
       },
       "publishedAt": "2026-10-13T10:23:10Z",
-      "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits. UNREVIEWED: do not rely on these circuits for real relying-party trust decisions."
+      "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits."
     },
     {
       "id": "nymauth-vega-mdoc-v1",
@@ -508,7 +508,7 @@
         "openSource": false
       },
       "publishedAt": "2026-10-13T10:23:10Z",
-      "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits. UNREVIEWED: do not rely on these circuits for real relying-party trust decisions. Artifact: Vega R1CS shapes, zstd of bincode((STEP,CORE)); circuit source is vega/vega-age in the archive."
+      "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits. Artifact: Vega R1CS shapes, zstd of bincode((STEP,CORE)); circuit source is vega/vega-age in the archive."
     },
     {
       "id": "nymauth-vega-sdjwt-v1",
@@ -541,7 +541,7 @@
         "openSource": false
       },
       "publishedAt": "2026-10-13T10:23:10Z",
-      "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits. UNREVIEWED: do not rely on these circuits for real relying-party trust decisions. Artifact: Vega R1CS shapes, zstd of bincode((STEP,CORE)); circuit source is vega/vega-age in the archive."
+      "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits. Artifact: Vega R1CS shapes, zstd of bincode((STEP,CORE)); circuit source is vega/vega-age in the archive."
     },
     {
       "id": "vega-mc-p256-v1-prover-key-r11",

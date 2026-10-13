@@ -1,0 +1,36 @@
+{
+  "id": "nymauth-longfellow-sdjwt-v1",
+  "system": "longfellow-nymauth",
+  "systemVersion": "61a8a73",
+  "docTypes": [
+    "urn:europa:attestation:nym_auth:1"
+  ],
+  "published": true,
+  "status": "active",
+  "params": {
+    "block_enc_hash": "7604",
+    "block_enc_sig": "4679",
+    "configuration": "known-offender-matching-ssc",
+    "format": "sdjwt",
+    "hash_circuit_id": "d929f3396a9abcce44bd010c01764a237af20f5c6601956ea3a41dedbfde0c01",
+    "sig_circuit_id": "00513797c75b2eab1a9db75004977c15317d4e40c0db1d00674523431baa75cb"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/e094964aa59d069d13fcd942a04391e0b1c5f243f6b6aec3d09b4294d1332a22",
+    "hash": "sha256:e094964aa59d069d13fcd942a04391e0b1c5f243f6b6aec3d09b4294d1332a22",
+    "size": 576867,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:97ff08f76ff9b9cac28b47b452558677fccb9050a87d2e22984a376123b514cb",
+      "size": 1592003
+    }
+  },
+  "source": {
+    "origin": "Circuit archive nym-auth-circuits.zip (SHA-256 f59a09121369c602b0c9663560ce38ee177f8ada1348389142ae21510862266e) from the SIROS circuit developers; no public repository URL yet",
+    "toolchain": "google longfellow-zk 61a8a735964d1b22bccf79bf14ef6767249cdf92 (LFC2)",
+    "openSource": false
+  },
+  "publishedAt": "2026-10-13T10:23:10Z",
+  "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits. UNREVIEWED: do not rely on these circuits for real relying-party trust decisions."
+}

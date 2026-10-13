@@ -1,0 +1,33 @@
+{
+  "id": "nymauth-vega-sdjwt-v1",
+  "system": "vega-nymauth",
+  "systemVersion": "c0ee259",
+  "docTypes": [
+    "urn:europa:attestation:nym_auth:1"
+  ],
+  "published": true,
+  "status": "active",
+  "params": {
+    "configuration": "known-offender-matching-ssc",
+    "format": "sdjwt",
+    "role": "shapes"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/57ccab40b9eae5261cb759f3a972dfd8cb6d2d0df6b6b33bd35b954412ea97f4",
+    "hash": "sha256:57ccab40b9eae5261cb759f3a972dfd8cb6d2d0df6b6b33bd35b954412ea97f4",
+    "size": 651609,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:eb8c4dd35a96dc681cfc7e821af5df8b24c0ad7e33424f8b2bd3d7e324662e53",
+      "size": 22800368
+    }
+  },
+  "source": {
+    "origin": "Circuit archive nym-auth-circuits.zip (SHA-256 f59a09121369c602b0c9663560ce38ee177f8ada1348389142ae21510862266e) from the SIROS circuit developers; no public repository URL yet",
+    "toolchain": "microsoft vega-prover c0ee259053cd12eaf43ed71b5cde375452b3ee4d, vega-age (bellpepper)",
+    "openSource": false
+  },
+  "publishedAt": "2026-10-13T10:23:10Z",
+  "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits. Artifact: Vega R1CS shapes, zstd of bincode((STEP,CORE)); circuit source is vega/vega-age in the archive."
+}

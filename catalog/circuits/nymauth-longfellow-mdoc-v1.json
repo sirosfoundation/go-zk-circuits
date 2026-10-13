@@ -1,0 +1,36 @@
+{
+  "id": "nymauth-longfellow-mdoc-v1",
+  "system": "longfellow-nymauth",
+  "systemVersion": "61a8a73",
+  "docTypes": [
+    "eu.europa.ec.eudi.nym_auth.1"
+  ],
+  "published": true,
+  "status": "active",
+  "params": {
+    "block_enc_hash": "6983",
+    "block_enc_sig": "4679",
+    "configuration": "known-offender-matching-ssc",
+    "format": "mdoc",
+    "hash_circuit_id": "5f8c75ae5c3893ef6ab6a079628cb385ba85e95a85437d58570c455289d75729",
+    "sig_circuit_id": "00513797c75b2eab1a9db75004977c15317d4e40c0db1d00674523431baa75cb"
+  },
+  "artifact": {
+    "url": "/v1/artifacts/sha256/6c4b96ed431ee547a3a2e5b62621943a9a0a44646267653bf2db0fcc269b5c3b",
+    "hash": "sha256:6c4b96ed431ee547a3a2e5b62621943a9a0a44646267653bf2db0fcc269b5c3b",
+    "size": 395608,
+    "compression": "zstd",
+    "mediaType": "application/zstd",
+    "uncompressed": {
+      "hash": "sha256:92dd42fdf99673249eec33c7d07850bd9da66fbdab01ef26391e04c8341c1b7f",
+      "size": 1062842
+    }
+  },
+  "source": {
+    "origin": "Circuit archive nym-auth-circuits.zip (SHA-256 f59a09121369c602b0c9663560ce38ee177f8ada1348389142ae21510862266e) from the SIROS circuit developers; no public repository URL yet",
+    "toolchain": "google longfellow-zk 61a8a735964d1b22bccf79bf14ef6767249cdf92 (LFC2)",
+    "openSource": false
+  },
+  "publishedAt": "2026-10-13T10:23:10Z",
+  "notes": "nym_auth age-range plus pseudonym circuit (configuration known-offender-matching-ssc, DST nym_auth/v1/known-offender-matching-ssc). Proves issuer ES256 signature, type, birth_date in [E,C], validity at T, device-key signature over the verifier challenge, SHA-256(secret_seed)=ssc and pseudonym = SHA-256(DST||secret_seed||0x00*32||SHA-256(client_id)). Credentials must follow the issuance profile in the archive's SPEC.md 2.1 (only birth_date and ssc, 16-byte salts, fixed issuer header and claim order). Revocation is not checked. The type constant is baked into the circuit: changing the nym_auth doctype/vct requires new circuits."
+}

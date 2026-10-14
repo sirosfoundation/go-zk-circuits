@@ -30,7 +30,8 @@ type AddOptions struct {
 	MaxBytes       int64             // 0 = DefaultMaxArtifactBytes
 	Now            string            // RFC3339 publishedAt; empty = time.Now().UTC()
 	Notes          string
-	Unpublished    bool // spec §2.4.1: default is published=true; set this to keep the entry out of the served manifest
+	Capabilities   *catalog.Capabilities // optional; see docs/capabilities.md
+	Unpublished    bool                  // spec §2.4.1: default is published=true; set this to keep the entry out of the served manifest
 }
 
 // AddResult reports what Add did, for the CLI to print and for tests to assert on.
@@ -64,12 +65,13 @@ func Add(root string, opts AddOptions) (*AddResult, error) {
 	}
 
 	entry := catalog.CircuitDescriptor{
-		System:    opts.System,
-		Aliases:   opts.Aliases,
-		DocTypes:  opts.DocTypes,
-		Published: !opts.Unpublished,
-		Status:    catalog.StatusActive,
-		Notes:     opts.Notes,
+		System:       opts.System,
+		Aliases:      opts.Aliases,
+		DocTypes:     opts.DocTypes,
+		Published:    !opts.Unpublished,
+		Status:       catalog.StatusActive,
+		Notes:        opts.Notes,
+		Capabilities: opts.Capabilities,
 		Source: &catalog.Source{
 			Origin:     opts.Origin,
 			Toolchain:  opts.Toolchain,

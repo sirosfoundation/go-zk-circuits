@@ -1,0 +1,72 @@
+# Circuit capabilities
+
+> `circuit-distribution-service-spec.md`, which the code cites as "the spec",
+> is not in this repository. This document is where the `capabilities`
+> extension is specified; when the spec file is added to the repo, this
+> becomes a subsection of its §2.4 entry schema.
+
+The catalog's `system`, `id` and `docTypes` say which proof system and which
+circuit an entry is. They cannot say which functions, parameters and
+credential the circuit supports, because that lives in the free-form,
+scalar-only `params`. `capabilities` is an optional, general, machine-readable
+declaration of that. Consumers (wallets) interpret it themselves; this
+repository only ensures that what is in the manifest is well-formed.
+
+## Schema (additive, `manifestVersion` stays 1)
+
+`capabilities` is an optional field of a catalog entry. A client that does not
+know it ignores it. An entry without it is valid and declares nothing. Entries and the generated manifest that do not carry it are
+byte-for-byte unchanged by its introduction.
+
+```json
+"capabilities": {
+  "schema": 1,
+  "presentation": "circuit_zk",
+  "credential": { "format": "mso_mdoc", "type": "eu.europa.ec.eudi.nym_auth.1", "profile": "compact" },
+  "functions": [
+    { "id": "pseudonym-v1-sha256", "always": true,
+      "params": { "config": { "enum": ["known-offender-matching-ssc"] } } },
+    { "id": "age_check", "max": 1,
+      "params": { "ge": { "type": "full-date" }, "le": { "type": "full-date" } } }
+  ]
+}
+```
+
+| Field | Rule |
+|---|---|
+| `schema` | Required, must be `1`. Independent of `manifestVersion`. |
+| `presentation` | Required, non-empty opaque string: the presentation format served (for example `circuit_zk`). |
+| `credential.format`, `credential.type` | Required, non-empty opaque strings: the credential format and its type (mdoc doctype or SD-JWT VC `vct`). |
+| `credential.profile` | Optional opaque string: an issuance profile the credential must follow for the circuit to accept it. |
+| `functions` | Required, at least one. |
+| `functions[].id` | Required, non-empty, unique within the entry. |
+| `functions[].max` | Optional integer >= 1: the most instances of the function one proof can carry. Absent means unbounded. |
+| `functions[].always` | Optional boolean: the circuit's statement always includes this function; a proof from this circuit always carries it. |
+| `functions[].params` | Optional map param name -> constraint. A param that is not listed is not supported. |
+
+A constraint has exactly one of:
+
+- `{"enum": [...]}`: the value must be a string equal to one of the listed
+  values. At least one value; values non-empty and unique.
+- `{"type": "<name>"}`: the value must be of that type. Types: `full-date`
+  (a string, a valid `YYYY-MM-DD` date), `string`, `integer` (a JSON number
+  with no fraction).
+
+Anything else is rejected: unknown keys at any level (so an unknown constraint
+kind is an error, never silently "no constraint"), unknown type names,
+`schema` other than 1. Function ids, param names and enum values are opaque to
+the catalog; the mechanism carries no knowledge of any function family, so new
+families and circuit kinds add entries, not schema.
+
+`circuitctl add --capabilities <file.json>` sets the field on a new entry,
+`circuitctl set-capabilities <id> --capabilities <file.json>` replaces it on an
+existing one and `circuitctl set-capabilities <id> --clear` removes it. Both
+validate the file and regenerate the manifest. `circuitctl verify` re-validates
+every entry's capabilities.
+
+## Trust
+
+`capabilities` is descriptive, like `source.verifiedBy`. It authenticates
+nothing. Which circuits a wallet will actually use is still governed by its own
+pin table (spec §7.3). A wrong claim costs a failed proof, not a wrong
+acceptance.

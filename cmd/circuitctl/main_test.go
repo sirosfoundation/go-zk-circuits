@@ -180,3 +180,79 @@ func TestRunLifecycle_UnknownIDFails(t *testing.T) {
 	err := runLifecycle([]string{"does-not-exist", "--root", root, "--reason", "x"}, "deprecate")
 	require.Error(t, err)
 }
+
+const capsDoc = `{"schema":1,"presentation":"circuit_zk","credential":{"format":"mso_mdoc","type":"t"},"functions":[{"id":"f","always":true}]}`
+
+func writeCapsFile(t *testing.T, doc string) string {
+	t.Helper()
+	p := filepath.Join(t.TempDir(), "caps.json")
+	require.NoError(t, os.WriteFile(p, []byte(doc), 0o600))
+	return p
+}
+
+func TestRunAdd_WithCapabilities(t *testing.T) {
+	root := t.TempDir()
+	file := writeZstdFixture(t, t.TempDir(),
+		"8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("fake"))
+	require.NoError(t, runAdd([]string{
+		file, "--root", root, "--system", "longfellow", "--origin", "o",
+		"--capabilities", writeCapsFile(t, capsDoc),
+	}))
+	entry, err := os.ReadFile(filepath.Join(root, "catalog", "circuits", "longfellow-libzk-v1_8_2_4307_2945.json")) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	require.Contains(t, string(entry), `"capabilities"`)
+	manifest, err := os.ReadFile(filepath.Join(root, "catalog", "manifest.json")) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	require.Contains(t, string(manifest), `"capabilities"`)
+	require.NoError(t, runVerify([]string{"--root", root}))
+}
+
+func TestRunAdd_RejectsMalformedCapabilities(t *testing.T) {
+	root := t.TempDir()
+	file := writeZstdFixture(t, t.TempDir(),
+		"8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("fake"))
+	err := runAdd([]string{
+		file, "--root", root, "--system", "longfellow", "--origin", "o",
+		"--capabilities", writeCapsFile(t, `{"schema":2}`),
+	})
+	require.ErrorContains(t, err, "--capabilities")
+	require.NoFileExists(t, filepath.Join(root, "catalog", "circuits", "longfellow-libzk-v1_8_2_4307_2945.json"))
+
+	err = runAdd([]string{file, "--root", root, "--system", "longfellow", "--origin", "o", "--capabilities", "/nonexistent/caps.json"})
+	require.ErrorContains(t, err, "--capabilities")
+}
+
+func TestRunSetCapabilities_SetReplaceClear(t *testing.T) {
+	root := t.TempDir()
+	id := addFixture(t, root)
+	manifestPath := filepath.Join(root, "catalog", "manifest.json")
+
+	require.NoError(t, runSetCapabilities([]string{id, "--root", root, "--capabilities", writeCapsFile(t, capsDoc)}))
+	m, err := os.ReadFile(manifestPath) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	require.Contains(t, string(m), `"presentation": "circuit_zk"`)
+	require.NoError(t, runVerify([]string{"--root", root}))
+
+	replaced := `{"schema":1,"presentation":"other_pres","credential":{"format":"f","type":"t"},"functions":[{"id":"g"}]}`
+	require.NoError(t, runSetCapabilities([]string{id, "--root", root, "--capabilities", writeCapsFile(t, replaced)}))
+	m, err = os.ReadFile(manifestPath) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	require.Contains(t, string(m), "other_pres")
+	require.NotContains(t, string(m), "circuit_zk")
+
+	require.NoError(t, runSetCapabilities([]string{id, "--root", root, "--clear"}))
+	m, err = os.ReadFile(manifestPath) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	require.NotContains(t, string(m), "capabilities")
+	require.NoError(t, runVerify([]string{"--root", root}))
+}
+
+func TestRunSetCapabilities_Errors(t *testing.T) {
+	root := t.TempDir()
+	id := addFixture(t, root)
+	require.Error(t, runSetCapabilities([]string{id, "--root", root}), "needs --capabilities or --clear")
+	require.Error(t, runSetCapabilities([]string{id, "--root", root, "--clear", "--capabilities", writeCapsFile(t, capsDoc)}), "not both")
+	require.Error(t, runSetCapabilities([]string{id, "--root", root, "--capabilities", writeCapsFile(t, `{}`)}))
+	require.Error(t, runSetCapabilities([]string{"nope", "--root", root, "--clear"}))
+	require.Error(t, runSetCapabilities([]string{"--root", root, "--clear"}))
+}

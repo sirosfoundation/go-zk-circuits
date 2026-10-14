@@ -62,6 +62,7 @@ type CircuitDescriptor struct {
 	Published     bool           `json:"published"`
 	Status        string         `json:"status"`
 	Params        map[string]any `json:"params"`
+	Capabilities  *Capabilities  `json:"capabilities,omitempty"`
 	Artifact      *Artifact      `json:"artifact,omitempty"`
 	Source        *Source        `json:"source,omitempty"`
 	PublishedAt   string         `json:"publishedAt"`

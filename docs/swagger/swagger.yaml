@@ -59,6 +59,19 @@ definitions:
       url:
         type: string
     type: object
+  catalog.Capabilities:
+    properties:
+      credential:
+        $ref: '#/definitions/catalog.CredentialCap'
+      functions:
+        items:
+          $ref: '#/definitions/catalog.FunctionCap'
+        type: array
+      presentation:
+        type: string
+      schema:
+        type: integer
+    type: object
   catalog.CircuitDescriptor:
     properties:
       aliases:
@@ -67,6 +80,8 @@ definitions:
         type: array
       artifact:
         $ref: '#/definitions/catalog.Artifact'
+      capabilities:
+        $ref: '#/definitions/catalog.Capabilities'
       deprecatedAt:
         type: string
       docTypes:
@@ -93,6 +108,28 @@ definitions:
       systemVersion:
         type: string
     type: object
+  catalog.CredentialCap:
+    properties:
+      format:
+        type: string
+      profile:
+        type: string
+      type:
+        type: string
+    type: object
+  catalog.FunctionCap:
+    properties:
+      always:
+        type: boolean
+      id:
+        type: string
+      max:
+        type: integer
+      params:
+        additionalProperties:
+          $ref: '#/definitions/catalog.ParamConstraint'
+        type: object
+    type: object
   catalog.Manifest:
     properties:
       catalog:
@@ -106,6 +143,15 @@ definitions:
       manifestVersion:
         type: integer
       next:
+        type: string
+    type: object
+  catalog.ParamConstraint:
+    properties:
+      enum:
+        items:
+          type: string
+        type: array
+      type:
         type: string
     type: object
   catalog.Source:

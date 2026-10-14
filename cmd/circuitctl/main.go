@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/sirosfoundation/go-zk-circuits/pkg/catalog"
 	"github.com/sirosfoundation/go-zk-circuits/pkg/publish"
 )
 
@@ -39,6 +40,8 @@ func main() {
 		err = runLifecycle(args, "publish")
 	case "unpublish":
 		err = runLifecycle(args, "unpublish")
+	case "set-capabilities":
+		err = runSetCapabilities(args)
 	case "-h", "--help", "help":
 		usage()
 		return
@@ -60,11 +63,12 @@ func usage() {
 	fmt.Fprintln(os.Stderr, `circuitctl — publish and manage the zk-circuits catalog
 
 Usage:
-  circuitctl add <file> --system <system> --origin <url> [--unpublished] [options]
+  circuitctl add <file> --system <system> --origin <url> [--capabilities <file.json>] [--unpublished] [options]
   circuitctl verify [--root <path>] [--generated-at <RFC3339>]
   circuitctl ls [--root <path>] [--stale]
   circuitctl deprecate <id> --reason <text> [--root <path>]
   circuitctl revoke <id> --reason <text> [--root <path>]
+  circuitctl set-capabilities <id> (--capabilities <file.json> | --clear) [--root <path>]
   circuitctl publish <id> [--reason <text>] [--root <path>]
   circuitctl unpublish <id> [--reason <text>] [--root <path>]
 
@@ -134,6 +138,7 @@ func runAdd(args []string) error {
 	notes := fs.String("notes", "", "free text for humans (spec §2.4) — clients MUST NOT parse it")
 	unpublished := fs.Bool("unpublished", false, "keep this entry out of the served manifest (spec §2.4.1) — default is published")
 	generatedAt := fs.String("generated-at", "", "manifest generatedAt to write (RFC3339); defaults to now")
+	capsFile := fs.String("capabilities", "", "JSON file declaring the circuit's capabilities (docs/capabilities.md); optional")
 	var aliases, docTypes, params repeatedFlag
 	fs.Var(&aliases, "alias", "additional resolvable id (repeatable)")
 	fs.Var(&docTypes, "doc-type", "supported docType (repeatable)")
@@ -151,6 +156,11 @@ func runAdd(args []string) error {
 		explicitParams[k] = v
 	}
 
+	caps, err := readCapabilitiesFile(*capsFile)
+	if err != nil {
+		return err
+	}
+
 	result, err := publish.Add(*root, publish.AddOptions{
 		InputFile:      file,
 		System:         *system,
@@ -165,6 +175,7 @@ func runAdd(args []string) error {
 		Notes:          *notes,
 		Unpublished:    *unpublished,
 		ExplicitParams: explicitParams,
+		Capabilities:   caps,
 	})
 	if err != nil {
 		return err
@@ -178,6 +189,58 @@ func runAdd(args []string) error {
 	}
 	if err := publish.RegenerateManifest(*root, genAt); err != nil {
 		return fmt.Errorf("added the entry but failed to regenerate manifest.json: %w", err)
+	}
+	fmt.Println("regenerated catalog/manifest.json")
+	return nil
+}
+
+// readCapabilitiesFile parses and validates a --capabilities file; an empty
+// path means "none given" and returns nil.
+func readCapabilitiesFile(path string) (*catalog.Capabilities, error) {
+	if path == "" {
+		return nil, nil
+	}
+	data, err := os.ReadFile(path) //#nosec G304 -- operator-supplied CLI argument, not remote input
+	if err != nil {
+		return nil, fmt.Errorf("read --capabilities: %w", err)
+	}
+	caps, err := catalog.ParseCapabilities(data)
+	if err != nil {
+		return nil, fmt.Errorf("--capabilities %s: %w", path, err)
+	}
+	return caps, nil
+}
+
+func runSetCapabilities(args []string) error {
+	id, flagArgs, err := splitLeadingPositional(args, map[string]bool{"clear": true})
+	if err != nil {
+		return fmt.Errorf("%w (usage: circuitctl set-capabilities <id> (--capabilities <file.json> | --clear))", err)
+	}
+	fs := flag.NewFlagSet("set-capabilities", flag.ExitOnError)
+	root := fs.String("root", ".", "catalog repo root")
+	capsFile := fs.String("capabilities", "", "JSON file with the capabilities that replace the entry's current ones")
+	clearCaps := fs.Bool("clear", false, "remove the entry's capabilities")
+	generatedAt := fs.String("generated-at", "", "manifest generatedAt to write (RFC3339); defaults to now")
+	if err := fs.Parse(flagArgs); err != nil {
+		return err
+	}
+	if (*capsFile == "") == !*clearCaps {
+		return fmt.Errorf("exactly one of --capabilities <file> or --clear is required")
+	}
+	caps, err := readCapabilitiesFile(*capsFile)
+	if err != nil {
+		return err
+	}
+	if err := publish.SetCapabilities(*root, id, caps); err != nil {
+		return err
+	}
+	fmt.Printf("set-capabilities: %s\n", id)
+	genAt := *generatedAt
+	if genAt == "" {
+		genAt = time.Now().UTC().Format(time.RFC3339)
+	}
+	if err := publish.RegenerateManifest(*root, genAt); err != nil {
+		return fmt.Errorf("set-capabilities succeeded but failed to regenerate manifest.json: %w", err)
 	}
 	fmt.Println("regenerated catalog/manifest.json")
 	return nil

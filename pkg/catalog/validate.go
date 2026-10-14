@@ -90,6 +90,11 @@ func ValidateEntry(e *CircuitDescriptor) error {
 	if err := validateVegaParams(e); err != nil {
 		return fmt.Errorf("params: %w", err)
 	}
+	if e.Capabilities != nil {
+		if err := ValidateCapabilities(e.Capabilities); err != nil {
+			return fmt.Errorf("capabilities: %w", err)
+		}
+	}
 	if e.Artifact != nil {
 		if err := validateArtifact(e.Artifact); err != nil {
 			return fmt.Errorf("artifact: %w", err)

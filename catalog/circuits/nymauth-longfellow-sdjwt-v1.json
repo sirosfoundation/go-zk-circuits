@@ -15,6 +15,46 @@
     "hash_circuit_id": "d929f3396a9abcce44bd010c01764a237af20f5c6601956ea3a41dedbfde0c01",
     "sig_circuit_id": "00513797c75b2eab1a9db75004977c15317d4e40c0db1d00674523431baa75cb"
   },
+  "capabilities": {
+    "schema": 1,
+    "presentation": "circuit_zk",
+    "credential": {
+      "format": "dc+sd-jwt",
+      "type": "urn:europa:attestation:nym_auth:1",
+      "profile": "compact"
+    },
+    "functions": [
+      {
+        "id": "pseudonym-v1-sha256",
+        "max": 1,
+        "always": true,
+        "params": {
+          "config": {
+            "enum": [
+              "known-offender-matching-ssc"
+            ]
+          },
+          "verifier_id_type": {
+            "enum": [
+              "x509_san_dns"
+            ]
+          }
+        }
+      },
+      {
+        "id": "age_check",
+        "max": 1,
+        "params": {
+          "ge": {
+            "type": "full-date"
+          },
+          "le": {
+            "type": "full-date"
+          }
+        }
+      }
+    ]
+  },
   "artifact": {
     "url": "/v1/artifacts/sha256/e094964aa59d069d13fcd942a04391e0b1c5f243f6b6aec3d09b4294d1332a22",
     "hash": "sha256:e094964aa59d069d13fcd942a04391e0b1c5f243f6b6aec3d09b4294d1332a22",

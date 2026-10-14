@@ -12,6 +12,46 @@
     "format": "sdjwt",
     "role": "shapes"
   },
+  "capabilities": {
+    "schema": 1,
+    "presentation": "circuit_zk",
+    "credential": {
+      "format": "dc+sd-jwt",
+      "type": "urn:europa:attestation:nym_auth:1",
+      "profile": "compact"
+    },
+    "functions": [
+      {
+        "id": "pseudonym-v1-sha256",
+        "max": 1,
+        "always": true,
+        "params": {
+          "config": {
+            "enum": [
+              "known-offender-matching-ssc"
+            ]
+          },
+          "verifier_id_type": {
+            "enum": [
+              "x509_san_dns"
+            ]
+          }
+        }
+      },
+      {
+        "id": "age_check",
+        "max": 1,
+        "params": {
+          "ge": {
+            "type": "full-date"
+          },
+          "le": {
+            "type": "full-date"
+          }
+        }
+      }
+    ]
+  },
   "artifact": {
     "url": "/v1/artifacts/sha256/57ccab40b9eae5261cb759f3a972dfd8cb6d2d0df6b6b33bd35b954412ea97f4",
     "hash": "sha256:57ccab40b9eae5261cb759f3a972dfd8cb6d2d0df6b6b33bd35b954412ea97f4",

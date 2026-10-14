@@ -12,6 +12,46 @@
     "format": "mdoc",
     "role": "shapes"
   },
+  "capabilities": {
+    "schema": 1,
+    "presentation": "circuit_zk",
+    "credential": {
+      "format": "mso_mdoc",
+      "type": "eu.europa.ec.eudi.nym_auth.1",
+      "profile": "compact"
+    },
+    "functions": [
+      {
+        "id": "pseudonym-v1-sha256",
+        "max": 1,
+        "always": true,
+        "params": {
+          "config": {
+            "enum": [
+              "known-offender-matching-ssc"
+            ]
+          },
+          "verifier_id_type": {
+            "enum": [
+              "x509_san_dns"
+            ]
+          }
+        }
+      },
+      {
+        "id": "age_check",
+        "max": 1,
+        "params": {
+          "ge": {
+            "type": "full-date"
+          },
+          "le": {
+            "type": "full-date"
+          }
+        }
+      }
+    ]
+  },
   "artifact": {
     "url": "/v1/artifacts/sha256/b457ba5382eb7604ef035e790f2cb24f0cd5fdcd065f383ff1c2c49fab1bb4df",
     "hash": "sha256:b457ba5382eb7604ef035e790f2cb24f0cd5fdcd065f383ff1c2c49fab1bb4df",

@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -9,11 +10,13 @@ import (
 
 func intp(n int) *int { return &n }
 
+func strp(s string) *string { return &s }
+
 func validCaps() *Capabilities {
 	return &Capabilities{
 		Schema:       1,
 		Presentation: "circuit_zk",
-		Credential:   &CredentialCap{Format: "mso_mdoc", Type: "doc.type", Profile: "compact"},
+		Credential:   &CredentialCap{Format: "mso_mdoc", Type: "doc.type", IssuanceProfile: strp("spec-2.1")},
 		Functions: []FunctionCap{
 			{ID: "f-always", Always: true, Params: map[string]ParamConstraint{
 				"cfg": {Enum: []string{"a"}},
@@ -41,6 +44,7 @@ func TestValidateCapabilities_Rules(t *testing.T) {
 		{"credential required", func(c *Capabilities) { c.Credential = nil }, "credential is required"},
 		{"credential.format required", func(c *Capabilities) { c.Credential.Format = "" }, "credential.format is required"},
 		{"credential.type required", func(c *Capabilities) { c.Credential.Type = "" }, "credential.type is required"},
+		{"credential.issuance_profile non-empty", func(c *Capabilities) { c.Credential.IssuanceProfile = strp("") }, "credential.issuance_profile must not be empty"},
 		{"functions non-empty", func(c *Capabilities) { c.Functions = nil }, "at least one function"},
 		{"function id required", func(c *Capabilities) { c.Functions[0].ID = "" }, "id is required"},
 		{"function id unique", func(c *Capabilities) { c.Functions[1].ID = "f-always" }, "duplicate function id"},
@@ -77,6 +81,27 @@ func TestParseCapabilities_RejectsUnknownKeys(t *testing.T) {
 			require.ErrorContains(t, err, "unknown field")
 		})
 	}
+}
+
+func TestParseCapabilities_IssuanceProfile(t *testing.T) {
+	const base = `{"schema":1,"presentation":"p","credential":{"format":"f","type":"t"%s},"functions":[{"id":"x"}]}`
+
+	c, err := ParseCapabilities([]byte(fmt.Sprintf(base, `,"issuance_profile":"spec-2.1"`)))
+	require.NoError(t, err)
+	require.NotNil(t, c.Credential.IssuanceProfile)
+	require.Equal(t, "spec-2.1", *c.Credential.IssuanceProfile)
+
+	c, err = ParseCapabilities([]byte(fmt.Sprintf(base, "")))
+	require.NoError(t, err, "issuance_profile is optional")
+	require.Nil(t, c.Credential.IssuanceProfile)
+
+	_, err = ParseCapabilities([]byte(fmt.Sprintf(base, `,"issuance_profile":""`)))
+	require.ErrorContains(t, err, "issuance_profile must not be empty")
+
+	// The pre-rename key is now an unknown field, with a pointer to the new name.
+	_, err = ParseCapabilities([]byte(fmt.Sprintf(base, `,"profile":"compact"`)))
+	require.ErrorContains(t, err, `unknown field "profile"`)
+	require.ErrorContains(t, err, "renamed credential.issuance_profile")
 }
 
 func TestParseCapabilities_NullAndGarbage(t *testing.T) {

@@ -431,7 +431,7 @@ const docTemplate = `{
                 "format": {
                     "type": "string"
                 },
-                "profile": {
+                "issuance_profile": {
                     "type": "string"
                 },
                 "type": {

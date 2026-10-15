@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 // CapabilitiesSchema is the only capabilities schema version this build
@@ -35,11 +36,14 @@ type Capabilities struct {
 
 // CredentialCap is the credential a circuit proves over: its format, its
 // type (an mdoc doctype or an SD-JWT VC vct) and, optionally, an issuance
-// profile the credential must follow for the circuit to accept it.
+// profile the credential must follow for the circuit to accept it. The
+// issuance profile is a constraint on the input credential, not an
+// interoperability profile of the circuit. It is a pointer so that an
+// explicitly empty string can be told apart from absence and rejected.
 type CredentialCap struct {
-	Format  string `json:"format"`
-	Type    string `json:"type"`
-	Profile string `json:"profile,omitempty"`
+	Format          string  `json:"format"`
+	Type            string  `json:"type"`
+	IssuanceProfile *string `json:"issuance_profile,omitempty"`
 }
 
 // FunctionCap is one function a circuit supports. Max bounds the number of
@@ -71,6 +75,9 @@ func (c *Capabilities) UnmarshalJSON(data []byte) error {
 	dec.DisallowUnknownFields()
 	var p plain
 	if err := dec.Decode(&p); err != nil {
+		if strings.Contains(err.Error(), `unknown field "profile"`) {
+			return fmt.Errorf("capabilities: %w (credential.profile was renamed credential.issuance_profile)", err)
+		}
 		return fmt.Errorf("capabilities: %w", err)
 	}
 	*c = Capabilities(p)
@@ -109,6 +116,9 @@ func ValidateCapabilities(c *Capabilities) error {
 	}
 	if c.Credential.Type == "" {
 		return fmt.Errorf("credential.type is required")
+	}
+	if c.Credential.IssuanceProfile != nil && *c.Credential.IssuanceProfile == "" {
+		return fmt.Errorf("credential.issuance_profile must not be empty when present")
 	}
 	if len(c.Functions) == 0 {
 		return fmt.Errorf("functions must list at least one function")

@@ -22,7 +22,7 @@ byte-for-byte unchanged by its introduction.
 "capabilities": {
   "schema": 1,
   "presentation": "circuit_zk",
-  "credential": { "format": "mso_mdoc", "type": "eu.europa.ec.eudi.nym_auth.1", "profile": "compact" },
+  "credential": { "format": "mso_mdoc", "type": "eu.europa.ec.eudi.nym_auth.1", "issuance_profile": "nym_auth-spec-2.1" },
   "functions": [
     { "id": "pseudonym-v1-sha256", "always": true,
       "params": { "config": { "enum": ["known-offender-matching-ssc"] } } },
@@ -37,7 +37,7 @@ byte-for-byte unchanged by its introduction.
 | `schema` | Required, must be `1`. Independent of `manifestVersion`. |
 | `presentation` | Required, non-empty opaque string: the presentation format served (for example `circuit_zk`). |
 | `credential.format`, `credential.type` | Required, non-empty opaque strings: the credential format and its type (mdoc doctype or SD-JWT VC `vct`). |
-| `credential.profile` | Optional opaque string: an issuance profile the credential must follow for the circuit to accept it. |
+| `credential.issuance_profile` | Optional, non-empty opaque string (an empty string is rejected): an issuance profile the credential must follow for the circuit to accept it; a constraint on the input credential, not an interop profile of the circuit. The key was named `profile` before; that name is now rejected as an unknown field. |
 | `functions` | Required, at least one. |
 | `functions[].id` | Required, non-empty, unique within the entry. |
 | `functions[].max` | Optional integer >= 1: the most instances of the function one proof can carry. Absent means unbounded. |

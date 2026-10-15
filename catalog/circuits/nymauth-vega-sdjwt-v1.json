@@ -29,11 +29,6 @@
             "enum": [
               "known-offender-matching-ssc"
             ]
-          },
-          "verifier_id_type": {
-            "enum": [
-              "x509_san_dns"
-            ]
           }
         }
       },

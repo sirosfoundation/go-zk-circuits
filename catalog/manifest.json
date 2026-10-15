@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-10-15T15:07:22Z",
+  "generatedAt": "2026-10-15T15:31:51Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -439,11 +439,6 @@
                 "enum": [
                   "known-offender-matching-ssc"
                 ]
-              },
-              "verifier_id_type": {
-                "enum": [
-                  "x509_san_dns"
-                ]
               }
             }
           },
@@ -514,11 +509,6 @@
                 "enum": [
                   "known-offender-matching-ssc"
                 ]
-              },
-              "verifier_id_type": {
-                "enum": [
-                  "x509_san_dns"
-                ]
               }
             }
           },
@@ -586,11 +576,6 @@
                 "enum": [
                   "known-offender-matching-ssc"
                 ]
-              },
-              "verifier_id_type": {
-                "enum": [
-                  "x509_san_dns"
-                ]
               }
             }
           },
@@ -657,11 +642,6 @@
               "config": {
                 "enum": [
                   "known-offender-matching-ssc"
-                ]
-              },
-              "verifier_id_type": {
-                "enum": [
-                  "x509_san_dns"
                 ]
               }
             }

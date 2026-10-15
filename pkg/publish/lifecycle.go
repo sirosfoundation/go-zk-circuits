@@ -87,3 +87,20 @@ func setStatus(root, id, status, reason string) error {
 	}
 	return writeEntryFile(fullPath, &entry)
 }
+
+// SetCapabilities implements circuitctl set-capabilities: it replaces the
+// entry's capabilities with caps, or removes them when caps is nil. Like the
+// other lifecycle edits it rewrites only the entry file; the caller
+// regenerates the manifest.
+func SetCapabilities(root, id string, caps *catalog.Capabilities) error {
+	fullPath := filepath.Join(root, catalog.EntryFilePath(id))
+	var entry catalog.CircuitDescriptor
+	if err := loadJSON(fullPath, &entry); err != nil {
+		return fmt.Errorf("load entry %q: %w", id, err)
+	}
+	entry.Capabilities = caps
+	if err := catalog.ValidateEntry(&entry); err != nil {
+		return fmt.Errorf("updated entry failed validation: %w", err)
+	}
+	return writeEntryFile(fullPath, &entry)
+}

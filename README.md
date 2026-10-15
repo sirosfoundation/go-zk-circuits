@@ -98,11 +98,16 @@ gh pr create --repo sirosfoundation/go-zk-circuits
 
 `main` is protected: your PR must pass CI (build/test, `circuitctl verify`, lint, `govulncheck`, a Docker build) **and** get one approving review from a `CODEOWNERS`-designated reviewer, since any PR touching `artifacts/` or `catalog/` always does (spec §5.4 — the bytes are the trust boundary). Once merged, it ships to the test environment automatically; a maintainer promotes it to production separately.
 
+### Declaring capabilities
+
+An entry can declare what its circuit proves (function ids, params, credential format and type) as machine-readable metadata. Pass `--capabilities <file.json>` to `add`, or edit an existing entry with `circuitctl set-capabilities <id> --capabilities <file.json>` (or `--clear`). The schema and its validation rules are in [docs/capabilities.md](docs/capabilities.md).
+
 ### Other lifecycle commands
 
 ```sh
 circuitctl deprecate/revoke <id> --reason <text>
 circuitctl publish/unpublish <id> [--reason <text>]
+circuitctl set-capabilities <id> (--capabilities <file.json> | --clear)
 ```
 
 Same flow as above: run locally, commit the result, open a PR.
@@ -115,6 +120,7 @@ cmd/circuitctl/   the publish CLI
 pkg/catalog/      wire schema, validation, deterministic manifest generation
 pkg/api/          HTTP handlers (gin)
 pkg/publish/      circuitctl's logic, shared with the service
+docs/             capabilities schema (capabilities.md); swagger/ is generated
 catalog/circuits/ per-entry source-of-truth JSON files
 catalog/manifest.json   GENERATED — never hand-edit
 artifacts/sha256/ the actual circuit blobs, content-addressed

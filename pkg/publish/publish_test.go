@@ -3,6 +3,7 @@ package publish
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/klauspost/compress/zstd"
@@ -374,4 +375,113 @@ func TestStaleRows_FlagsUnverifiedActiveEntries(t *testing.T) {
 	stale, err := StaleRows(root)
 	require.NoError(t, err)
 	require.Len(t, stale, 1)
+}
+
+func testCaps() *catalog.Capabilities {
+	return &catalog.Capabilities{
+		Schema: 1, Presentation: "circuit_zk",
+		Credential: &catalog.CredentialCap{Format: "mso_mdoc", Type: "t"},
+		Functions:  []catalog.FunctionCap{{ID: "f"}},
+	}
+}
+
+func addCapsFixture(t *testing.T, root string, caps *catalog.Capabilities) string {
+	t.Helper()
+	file := writeZstdFixture(t, t.TempDir(), "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
+	res, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", Capabilities: caps})
+	require.NoError(t, err)
+	return res.Entry.ID
+}
+
+func TestAdd_WithCapabilitiesPersistsAndVerifies(t *testing.T) {
+	root := t.TempDir()
+	id := addCapsFixture(t, root, testCaps())
+	require.NoError(t, RegenerateManifest(root, "2026-08-13T21:40:11Z"))
+	entries, err := LoadCatalogEntries(root)
+	require.NoError(t, err)
+	require.Equal(t, id, entries[0].ID)
+	require.Equal(t, testCaps(), entries[0].Capabilities)
+	report, err := Verify(root)
+	require.NoError(t, err)
+	require.True(t, report.OK(), "%v", report.Problems)
+}
+
+func TestAdd_RejectsInvalidCapabilities(t *testing.T) {
+	root := t.TempDir()
+	bad := testCaps()
+	bad.Presentation = ""
+	file := writeZstdFixture(t, t.TempDir(), "8_2_4307_2945_deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef", []byte("x"))
+	_, err := Add(root, AddOptions{InputFile: file, System: "longfellow", Origin: "o", Capabilities: bad})
+	require.ErrorContains(t, err, "capabilities")
+}
+
+func TestSetCapabilities_SetReplaceClear(t *testing.T) {
+	root := t.TempDir()
+	id := addCapsFixture(t, root, nil)
+	require.NoError(t, SetCapabilities(root, id, testCaps()))
+	entries, err := LoadCatalogEntries(root)
+	require.NoError(t, err)
+	require.Equal(t, testCaps(), entries[0].Capabilities)
+
+	other := testCaps()
+	other.Presentation = "other"
+	require.NoError(t, SetCapabilities(root, id, other))
+	entries, err = LoadCatalogEntries(root)
+	require.NoError(t, err)
+	require.Equal(t, "other", entries[0].Capabilities.Presentation)
+
+	require.NoError(t, SetCapabilities(root, id, nil))
+	entries, err = LoadCatalogEntries(root)
+	require.NoError(t, err)
+	require.Nil(t, entries[0].Capabilities)
+
+	bad := testCaps()
+	bad.Schema = 3
+	require.ErrorContains(t, SetCapabilities(root, id, bad), "validation")
+	require.Error(t, SetCapabilities(root, "missing", testCaps()))
+}
+
+func TestVerify_ReportsInvalidCapabilitiesOnDisk(t *testing.T) {
+	root := t.TempDir()
+	id := addCapsFixture(t, root, nil)
+	require.NoError(t, RegenerateManifest(root, "2026-08-13T21:40:11Z"))
+	// Hand-edit the entry file to carry capabilities that parse but are invalid.
+	p := filepath.Join(root, catalog.EntryFilePath(id))
+	data, err := os.ReadFile(p) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	edited := strings.Replace(string(data), `"params": {`, `"capabilities": {"schema": 7, "presentation": "p", "credential": {"format": "f", "type": "t"}, "functions": [{"id": "f"}]},
+  "params": {`, 1)
+	require.NoError(t, os.WriteFile(p, []byte(edited), 0o600)) //#nosec G703 -- test writes under t.TempDir()
+
+	report, err := Verify(root)
+	require.NoError(t, err)
+	require.False(t, report.OK())
+	require.Contains(t, strings.Join(report.Problems, "\n"), "capabilities")
+}
+
+func TestVerify_UnknownCapabilitiesKeyFailsLoad(t *testing.T) {
+	root := t.TempDir()
+	id := addCapsFixture(t, root, nil)
+	p := filepath.Join(root, catalog.EntryFilePath(id))
+	data, err := os.ReadFile(p) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	edited := strings.Replace(string(data), `"params": {`, `"capabilities": {"schema": 1, "mystery": true},
+  "params": {`, 1)
+	require.NoError(t, os.WriteFile(p, []byte(edited), 0o600)) //#nosec G703 -- test writes under t.TempDir()
+	_, err = Verify(root)
+	require.ErrorContains(t, err, "unknown field")
+}
+
+func TestVerify_NullCapabilitiesOnDiskFailsLoad(t *testing.T) {
+	root := t.TempDir()
+	id := addCapsFixture(t, root, nil)
+	p := filepath.Join(root, catalog.EntryFilePath(id))
+	data, err := os.ReadFile(p) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	edited := strings.Replace(string(data), `"params": {`, `"capabilities": null,
+  "params": {`, 1)
+	require.NotEqual(t, string(data), edited)
+	require.NoError(t, os.WriteFile(p, []byte(edited), 0o600)) //#nosec G703 -- test writes under t.TempDir()
+	_, err = Verify(root)
+	require.ErrorContains(t, err, "got null")
 }

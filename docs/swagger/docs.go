@@ -351,6 +351,26 @@ const docTemplate = `{
                 }
             }
         },
+        "catalog.Capabilities": {
+            "type": "object",
+            "properties": {
+                "credential": {
+                    "$ref": "#/definitions/catalog.CredentialCap"
+                },
+                "functions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/catalog.FunctionCap"
+                    }
+                },
+                "presentation": {
+                    "type": "string"
+                },
+                "schema": {
+                    "type": "integer"
+                }
+            }
+        },
         "catalog.CircuitDescriptor": {
             "type": "object",
             "properties": {
@@ -362,6 +382,9 @@ const docTemplate = `{
                 },
                 "artifact": {
                     "$ref": "#/definitions/catalog.Artifact"
+                },
+                "capabilities": {
+                    "$ref": "#/definitions/catalog.Capabilities"
                 },
                 "deprecatedAt": {
                     "type": "string"
@@ -402,6 +425,40 @@ const docTemplate = `{
                 }
             }
         },
+        "catalog.CredentialCap": {
+            "type": "object",
+            "properties": {
+                "format": {
+                    "type": "string"
+                },
+                "issuance_profile": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "catalog.FunctionCap": {
+            "type": "object",
+            "properties": {
+                "always": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "max": {
+                    "type": "integer"
+                },
+                "params": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/catalog.ParamConstraint"
+                    }
+                }
+            }
+        },
         "catalog.Manifest": {
             "type": "object",
             "properties": {
@@ -421,6 +478,20 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "next": {
+                    "type": "string"
+                }
+            }
+        },
+        "catalog.ParamConstraint": {
+            "type": "object",
+            "properties": {
+                "enum": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
                     "type": "string"
                 }
             }

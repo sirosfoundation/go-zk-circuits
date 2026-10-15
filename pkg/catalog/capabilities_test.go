@@ -172,7 +172,7 @@ func TestParseCapabilities_RejectsNullMembersAndAmbiguousConstraints(t *testing.
 	base := func(cred, fn string) string {
 		return `{"schema":1,"presentation":"p","credential":{"format":"f","type":"t"` + cred + `},"functions":[` + fn + `]}`
 	}
-	cases := map[string]string{
+	cases := map[string]string{ //#nosec G101 -- JSON test documents, not credentials
 		"max null":              base("", `{"id":"f","max":null}`),
 		"always null":           base("", `{"id":"f","always":null}`),
 		"issuance_profile null": base(`,"issuance_profile":null`, `{"id":"f"}`),

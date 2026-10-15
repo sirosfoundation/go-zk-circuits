@@ -56,7 +56,9 @@ A constraint has exactly one of:
   (a string, a valid `YYYY-MM-DD` date), `string`, `integer` (a JSON number
   with no fraction).
 
-Anything else is rejected: unknown keys at any level (so an unknown constraint
+Anything else is rejected: an explicit JSON `null` for any member (omit the
+member instead; a null `max` would otherwise silently mean unbounded), a
+constraint carrying both `enum` and `type` even if one is empty, unknown keys at any level (so an unknown constraint
 kind is an error, never silently "no constraint"), unknown type names,
 `schema` other than 1. Function ids, param names and enum values are opaque to
 the catalog; the mechanism carries no knowledge of any function family, so new

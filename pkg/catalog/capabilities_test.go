@@ -167,3 +167,30 @@ func TestCircuitDescriptor_UnmarshalAbsentCapabilitiesIsNil(t *testing.T) {
 	require.Equal(t, "x", e.ID)
 	require.Equal(t, "s", e.System)
 }
+
+func TestParseCapabilities_RejectsNullMembersAndAmbiguousConstraints(t *testing.T) {
+	base := func(cred, fn string) string {
+		return `{"schema":1,"presentation":"p","credential":{"format":"f","type":"t"` + cred + `},"functions":[` + fn + `]}`
+	}
+	cases := map[string]string{
+		"max null":              base("", `{"id":"f","max":null}`),
+		"always null":           base("", `{"id":"f","always":null}`),
+		"issuance_profile null": base(`,"issuance_profile":null`, `{"id":"f"}`),
+		"params null":           base("", `{"id":"f","params":null}`),
+		"constraint null":       base("", `{"id":"f","params":{"p":null}}`),
+		"enum null + type":      base("", `{"id":"f","params":{"p":{"enum":null,"type":"string"}}}`),
+		"enum + empty type":     base("", `{"id":"f","params":{"p":{"enum":["a"],"type":""}}}`),
+		"enum null in list":     base("", `{"id":"f","params":{"p":{"enum":["a",null]}}}`),
+		"functions null":        `{"schema":1,"presentation":"p","credential":{"format":"f","type":"t"},"functions":null}`,
+		"credential null":       `{"schema":1,"presentation":"p","credential":null,"functions":[{"id":"f"}]}`,
+	}
+	for name, doc := range cases {
+		_, err := ParseCapabilities([]byte(doc))
+		require.Error(t, err, name)
+		// the same documents are rejected when loaded as part of an entry
+		var e CircuitDescriptor
+		require.Error(t, json.Unmarshal([]byte(`{"id":"x","capabilities":`+doc+`}`), &e), name)
+	}
+	_, err := ParseCapabilities([]byte(base("", `{"id":"f","max":3,"always":true,"params":{"p":{"enum":["a"]},"q":{"type":"string"}}}`)))
+	require.NoError(t, err)
+}

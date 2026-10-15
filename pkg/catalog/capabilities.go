@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -71,6 +72,9 @@ type ParamConstraint struct {
 // never be read as "no constraint".
 func (c *Capabilities) UnmarshalJSON(data []byte) error {
 	type plain Capabilities // drops this method, avoiding recursion
+	if err := checkPresence(data); err != nil {
+		return fmt.Errorf("capabilities: %w", err)
+	}
 	dec := json.NewDecoder(bytes.NewReader(data))
 	dec.DisallowUnknownFields()
 	var p plain
@@ -82,6 +86,71 @@ func (c *Capabilities) UnmarshalJSON(data []byte) error {
 	}
 	*c = Capabilities(p)
 	return nil
+}
+
+// checkPresence inspects the raw JSON for what the typed decode loses: no
+// member of a capabilities document is nullable, so any explicit null is
+// rejected (it would otherwise be read as an absent member: "max": null would
+// become unbounded), and a param constraint must carry exactly one of the keys
+// enum and type even when one of them has an empty value.
+func checkPresence(data []byte) error {
+	var doc any
+	if err := json.Unmarshal(data, &doc); err != nil {
+		return err
+	}
+	if path := findNull(doc, ""); path != "" {
+		return fmt.Errorf("%s must not be null (omit the member instead)", path)
+	}
+	root, _ := doc.(map[string]any)
+	fns, _ := root["functions"].([]any)
+	for i, f := range fns {
+		fm, _ := f.(map[string]any)
+		params, _ := fm["params"].(map[string]any)
+		for name, c := range params {
+			cm, _ := c.(map[string]any)
+			_, hasEnum := cm["enum"]
+			_, hasType := cm["type"]
+			if hasEnum && hasType {
+				return fmt.Errorf("functions[%d] param %q: constraint must have exactly one of enum or type, got both", i, name)
+			}
+		}
+	}
+	return nil
+}
+
+// findNull returns the path of the first JSON null in v, or "".
+func findNull(v any, path string) string {
+	join := func(k string) string {
+		if path == "" {
+			return k
+		}
+		return path + "." + k
+	}
+	switch t := v.(type) {
+	case nil:
+		if path == "" {
+			return "capabilities"
+		}
+		return path
+	case map[string]any:
+		keys := make([]string, 0, len(t))
+		for k := range t {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		for _, k := range keys {
+			if p := findNull(t[k], join(k)); p != "" {
+				return p
+			}
+		}
+	case []any:
+		for i, e := range t {
+			if p := findNull(e, fmt.Sprintf("%s[%d]", path, i)); p != "" {
+				return p
+			}
+		}
+	}
+	return ""
 }
 
 // ParseCapabilities strictly decodes and validates a capabilities document

@@ -17,8 +17,7 @@
     "presentation": "circuit_zk",
     "credential": {
       "format": "dc+sd-jwt",
-      "type": "urn:europa:attestation:nym_auth:1",
-      "profile": "compact"
+      "type": "urn:europa:attestation:nym_auth:1"
     },
     "functions": [
       {

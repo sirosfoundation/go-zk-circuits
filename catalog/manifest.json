@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-10-14T10:04:48Z",
+  "generatedAt": "2026-10-15T15:07:22Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -427,8 +427,7 @@
         "presentation": "circuit_zk",
         "credential": {
           "format": "mso_mdoc",
-          "type": "eu.europa.ec.eudi.nym_auth.1",
-          "profile": "compact"
+          "type": "eu.europa.ec.eudi.nym_auth.1"
         },
         "functions": [
           {
@@ -503,8 +502,7 @@
         "presentation": "circuit_zk",
         "credential": {
           "format": "dc+sd-jwt",
-          "type": "urn:europa:attestation:nym_auth:1",
-          "profile": "compact"
+          "type": "urn:europa:attestation:nym_auth:1"
         },
         "functions": [
           {
@@ -576,8 +574,7 @@
         "presentation": "circuit_zk",
         "credential": {
           "format": "mso_mdoc",
-          "type": "eu.europa.ec.eudi.nym_auth.1",
-          "profile": "compact"
+          "type": "eu.europa.ec.eudi.nym_auth.1"
         },
         "functions": [
           {
@@ -649,8 +646,7 @@
         "presentation": "circuit_zk",
         "credential": {
           "format": "dc+sd-jwt",
-          "type": "urn:europa:attestation:nym_auth:1",
-          "profile": "compact"
+          "type": "urn:europa:attestation:nym_auth:1"
         },
         "functions": [
           {

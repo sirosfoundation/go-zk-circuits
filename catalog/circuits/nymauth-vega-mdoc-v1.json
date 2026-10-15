@@ -17,8 +17,7 @@
     "presentation": "circuit_zk",
     "credential": {
       "format": "mso_mdoc",
-      "type": "eu.europa.ec.eudi.nym_auth.1",
-      "profile": "compact"
+      "type": "eu.europa.ec.eudi.nym_auth.1"
     },
     "functions": [
       {

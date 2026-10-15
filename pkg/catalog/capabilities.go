@@ -21,9 +21,9 @@ const (
 
 // Capabilities declares, as machine-readable metadata, what a circuit proves
 // (docs/capabilities.md). Consumers interpret it themselves; this package only
-// checks that it is well-formed. It is descriptive metadata, like Source.VerifiedBy: it authenticates
-// nothing, and which circuit a client actually uses stays governed by that
-// client's own pin table (spec §7.3).
+// checks that it is well-formed. It is descriptive metadata, like
+// Source.VerifiedBy: it authenticates nothing, and which circuit a client
+// actually uses stays governed by that client's own pin table (spec §7.3).
 //
 // Function ids, param names and values are opaque strings to the catalog;
 // the mechanism carries no knowledge of any particular function family.
@@ -76,7 +76,7 @@ func (c *Capabilities) UnmarshalJSON(data []byte) error {
 	var p plain
 	if err := dec.Decode(&p); err != nil {
 		if strings.Contains(err.Error(), `unknown field "profile"`) {
-			return fmt.Errorf("capabilities: %w (credential.profile was renamed credential.issuance_profile)", err)
+			return fmt.Errorf("capabilities: %w (if this is credential.profile: it was renamed credential.issuance_profile)", err)
 		}
 		return fmt.Errorf("capabilities: %w", err)
 	}

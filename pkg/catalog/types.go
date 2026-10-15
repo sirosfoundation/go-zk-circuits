@@ -3,6 +3,12 @@
 // and deterministically regenerate it.
 package catalog
 
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+)
+
 // ManifestVersion is the only schema version this build understands.
 // Bumping it is a breaking change and moves in lockstep with the /v1/ URL prefix (spec §2.10, §3.2).
 const ManifestVersion = 1
@@ -68,6 +74,31 @@ type CircuitDescriptor struct {
 	PublishedAt   string         `json:"publishedAt"`
 	DeprecatedAt  string         `json:"deprecatedAt,omitempty"`
 	Notes         string         `json:"notes,omitempty"`
+}
+
+// UnmarshalJSON decodes a catalog entry and preserves the presence of the
+// optional capabilities member: encoding/json leaves a pointer nil for an
+// explicit JSON null without calling Capabilities.UnmarshalJSON, which would
+// make `"capabilities": null` indistinguishable from an absent member and
+// skip validation. Absent means "no capabilities"; null is rejected, as it is
+// by ParseCapabilities.
+func (d *CircuitDescriptor) UnmarshalJSON(data []byte) error {
+	type plain CircuitDescriptor // drops this method, avoiding recursion
+	var p plain
+	if err := json.Unmarshal(data, &p); err != nil {
+		return err
+	}
+	var probe struct {
+		Capabilities json.RawMessage `json:"capabilities"`
+	}
+	if err := json.Unmarshal(data, &probe); err != nil {
+		return err
+	}
+	if probe.Capabilities != nil && bytes.Equal(bytes.TrimSpace(probe.Capabilities), []byte("null")) {
+		return fmt.Errorf("capabilities: must be an object when present, got null (omit the member for no capabilities)")
+	}
+	*d = CircuitDescriptor(p)
+	return nil
 }
 
 // Artifact describes the downloadable bytes for a circuit (spec §2.6).

@@ -15,8 +15,12 @@ repository only ensures that what is in the manifest is well-formed.
 ## Schema (additive, `manifestVersion` stays 1)
 
 `capabilities` is an optional field of a catalog entry. A client that does not
-know it ignores it. An entry without it is valid and declares nothing. Entries and the generated manifest that do not carry it are
-byte-for-byte unchanged by its introduction.
+know it ignores it. An entry without it is valid and declares nothing. Entries and the generated
+manifest that do not carry it are byte-for-byte unchanged by its introduction.
+An explicit `"capabilities": null` is not the same as omitting the member: it
+is rejected (by entry loading, so `circuitctl verify` fails, and by the
+`--capabilities` file parser), so a placeholder can never be mistaken for a
+validated declaration.
 
 ```json
 "capabilities": {

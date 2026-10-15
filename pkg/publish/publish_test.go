@@ -471,3 +471,17 @@ func TestVerify_UnknownCapabilitiesKeyFailsLoad(t *testing.T) {
 	_, err = Verify(root)
 	require.ErrorContains(t, err, "unknown field")
 }
+
+func TestVerify_NullCapabilitiesOnDiskFailsLoad(t *testing.T) {
+	root := t.TempDir()
+	id := addCapsFixture(t, root, nil)
+	p := filepath.Join(root, catalog.EntryFilePath(id))
+	data, err := os.ReadFile(p) //#nosec G304 -- test reads a path it built under t.TempDir()
+	require.NoError(t, err)
+	edited := strings.Replace(string(data), `"params": {`, `"capabilities": null,
+  "params": {`, 1)
+	require.NotEqual(t, string(data), edited)
+	require.NoError(t, os.WriteFile(p, []byte(edited), 0o600)) //#nosec G703 -- test writes under t.TempDir()
+	_, err = Verify(root)
+	require.ErrorContains(t, err, "got null")
+}

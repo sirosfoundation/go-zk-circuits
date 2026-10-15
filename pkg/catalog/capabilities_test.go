@@ -143,3 +143,27 @@ func TestCircuitDescriptor_UnmarshalRejectsMalformedCapabilities(t *testing.T) {
 	err := json.Unmarshal([]byte(`{"id":"x","capabilities":{"schema":1,"bogus":true}}`), &e)
 	require.ErrorContains(t, err, "unknown field")
 }
+
+func TestCircuitDescriptor_UnmarshalRejectsNullCapabilities(t *testing.T) {
+	for _, doc := range []string{
+		`{"id":"x","capabilities":null}`,
+		`{"id":"x","capabilities": null }`,
+		`{"id":"x","Capabilities":null}`,
+	} {
+		var e CircuitDescriptor
+		err := json.Unmarshal([]byte(doc), &e)
+		require.ErrorContains(t, err, "got null", doc)
+	}
+	// Same rejection when the entry sits inside a manifest.
+	var m Manifest
+	err := json.Unmarshal([]byte(`{"circuits":[{"id":"x","capabilities":null}]}`), &m)
+	require.ErrorContains(t, err, "got null")
+}
+
+func TestCircuitDescriptor_UnmarshalAbsentCapabilitiesIsNil(t *testing.T) {
+	var e CircuitDescriptor
+	require.NoError(t, json.Unmarshal([]byte(`{"id":"x","system":"s"}`), &e))
+	require.Nil(t, e.Capabilities)
+	require.Equal(t, "x", e.ID)
+	require.Equal(t, "s", e.System)
+}

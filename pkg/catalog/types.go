@@ -60,9 +60,14 @@ type Manifest struct {
 // ArtifactHandler's check) not downloadable at /v1/artifacts/sha256/{hex}
 // either, even though its bytes are go:embed'd into the binary.
 type CircuitDescriptor struct {
-	ID            string         `json:"id"`
-	Aliases       []string       `json:"aliases,omitempty"`
-	System        string         `json:"system"`
+	ID      string   `json:"id"`
+	Aliases []string `json:"aliases,omitempty"`
+	System  string   `json:"system"`
+	// ProofSystem is the proof-system identity a verifier names in
+	// proof_system_values (for example longfellow-libzk-v1). Distinct from
+	// System, the client adapter key. Optional; absent means the entry does
+	// not declare one.
+	ProofSystem   string         `json:"proofSystem,omitempty"`
 	SystemVersion string         `json:"systemVersion"`
 	DocTypes      []string       `json:"docTypes,omitempty"`
 	Published     bool           `json:"published"`

@@ -84,3 +84,28 @@ func TestValidateSource_AcceptsValidVerifiedByAndRejected(t *testing.T) {
 	}}
 	require.NoError(t, validateSource(s))
 }
+
+func TestValidateEntry_URNAliasAndProofSystem(t *testing.T) {
+	e := validEntryForAliasTest()
+	e.Aliases = []string{"urn:circuits:longfellow:nym_auth:v1"}
+	e.ProofSystem = "longfellow-libzk-v1"
+	require.NoError(t, ValidateEntry(&e))
+
+	e.Aliases = []string{"has space"}
+	require.ErrorContains(t, ValidateEntry(&e), "alias")
+	e.Aliases = nil
+	e.ProofSystem = "bad proof system"
+	require.ErrorContains(t, ValidateEntry(&e), "proofSystem")
+	// the id charset itself stays colon-free
+	e.ProofSystem = ""
+	e.ID = "a:b"
+	require.Error(t, ValidateEntry(&e))
+}
+
+func validEntryForAliasTest() CircuitDescriptor {
+	return CircuitDescriptor{
+		ID: "x-v1", System: "s", SystemVersion: "1", Status: StatusActive,
+		Published: true, Params: map[string]any{}, Artifact: sampleArtifact(),
+		PublishedAt: "2026-10-21T00:00:00Z",
+	}
+}

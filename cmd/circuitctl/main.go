@@ -139,6 +139,7 @@ func runAdd(args []string) error {
 	unpublished := fs.Bool("unpublished", false, "keep this entry out of the served manifest (spec §2.4.1) — default is published")
 	generatedAt := fs.String("generated-at", "", "manifest generatedAt to write (RFC3339); defaults to now")
 	capsFile := fs.String("capabilities", "", "JSON file declaring the circuit's capabilities (docs/capabilities.md); optional")
+	proofSystem := fs.String("proof-system", "", "proof-system identity a verifier names in proof_system_values (optional)")
 	var aliases, docTypes, params repeatedFlag
 	fs.Var(&aliases, "alias", "additional resolvable id (repeatable)")
 	fs.Var(&docTypes, "doc-type", "supported docType (repeatable)")
@@ -176,6 +177,7 @@ func runAdd(args []string) error {
 		Unpublished:    *unpublished,
 		ExplicitParams: explicitParams,
 		Capabilities:   caps,
+		ProofSystem:    *proofSystem,
 	})
 	if err != nil {
 		return err

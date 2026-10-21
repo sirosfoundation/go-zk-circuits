@@ -1,6 +1,7 @@
 {
   "id": "nymauth-longfellow-sdjwt-v1",
   "system": "longfellow-nymauth",
+  "proofSystem": "longfellow-libzk-v1",
   "systemVersion": "61a8a73",
   "docTypes": [
     "urn:europa:attestation:nym_auth:1"
@@ -17,14 +18,14 @@
   },
   "capabilities": {
     "schema": 1,
-    "presentation": "circuit_zk",
+    "presentation": "zkp_req",
     "credential": {
       "format": "dc+sd-jwt",
       "type": "urn:europa:attestation:nym_auth:1"
     },
     "functions": [
       {
-        "id": "pseudonym-v1-sha256",
+        "id": "pseudonym",
         "max": 1,
         "always": true,
         "params": {
@@ -32,6 +33,14 @@
             "enum": [
               "known-offender-matching-ssc"
             ]
+          },
+          "prf": {
+            "enum": [
+              "sha-256"
+            ]
+          },
+          "ver": {
+            "type": "integer"
           }
         }
       },

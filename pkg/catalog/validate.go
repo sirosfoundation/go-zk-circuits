@@ -12,6 +12,14 @@ import (
 // segment and a filename on every platform.
 var idPattern = regexp.MustCompile(`^[A-Za-z0-9._-]{1,128}$`)
 
+// aliasPattern is idPattern plus ":" so an alias can be a URN such as
+// urn:circuits:longfellow:nym_auth:v1. ":" is legal in a URL path segment, and
+// aliases are only ever looked up in memory, never used as filenames.
+var aliasPattern = regexp.MustCompile(`^[A-Za-z0-9._:-]{1,128}$`)
+
+// proofSystemPattern restricts proofSystem to the id charset.
+var proofSystemPattern = regexp.MustCompile(`^[A-Za-z0-9._-]{1,128}$`)
+
 // hashPattern enforces "sha256:<64 lowercase hex>" (spec §2.6).
 var hashPattern = regexp.MustCompile(`^sha256:[0-9a-f]{64}$`)
 
@@ -58,9 +66,12 @@ func ValidateEntry(e *CircuitDescriptor) error {
 		return fmt.Errorf("id %q does not match %s", e.ID, idPattern.String())
 	}
 	for _, alias := range e.Aliases {
-		if !idPattern.MatchString(alias) {
-			return fmt.Errorf("alias %q does not match %s", alias, idPattern.String())
+		if !aliasPattern.MatchString(alias) {
+			return fmt.Errorf("alias %q does not match %s", alias, aliasPattern.String())
 		}
+	}
+	if e.ProofSystem != "" && !proofSystemPattern.MatchString(e.ProofSystem) {
+		return fmt.Errorf("proofSystem %q does not match %s", e.ProofSystem, proofSystemPattern.String())
 	}
 	if e.System == "" {
 		return fmt.Errorf("system is required")

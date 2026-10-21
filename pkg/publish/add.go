@@ -31,7 +31,8 @@ type AddOptions struct {
 	Now            string            // RFC3339 publishedAt; empty = time.Now().UTC()
 	Notes          string
 	Capabilities   *catalog.Capabilities // optional; see docs/capabilities.md
-	Unpublished    bool                  // spec §2.4.1: default is published=true; set this to keep the entry out of the served manifest
+	ProofSystem    string
+	Unpublished    bool // spec §2.4.1: default is published=true; set this to keep the entry out of the served manifest
 }
 
 // AddResult reports what Add did, for the CLI to print and for tests to assert on.
@@ -72,6 +73,7 @@ func Add(root string, opts AddOptions) (*AddResult, error) {
 		Status:       catalog.StatusActive,
 		Notes:        opts.Notes,
 		Capabilities: opts.Capabilities,
+		ProofSystem:  opts.ProofSystem,
 		Source: &catalog.Source{
 			Origin:     opts.Origin,
 			Toolchain:  opts.Toolchain,

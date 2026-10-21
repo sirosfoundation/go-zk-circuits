@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "generatedAt": "2026-10-15T15:31:51Z",
+  "generatedAt": "2026-10-21T00:35:06Z",
   "catalog": "siros-zk-circuits",
   "circuits": [
     {
@@ -407,7 +407,11 @@
     },
     {
       "id": "nymauth-longfellow-mdoc-v1",
+      "aliases": [
+        "urn:circuits:longfellow:nym_auth:v1"
+      ],
       "system": "longfellow-nymauth",
+      "proofSystem": "longfellow-libzk-v1",
       "systemVersion": "61a8a73",
       "docTypes": [
         "eu.europa.ec.eudi.nym_auth.1"
@@ -424,14 +428,14 @@
       },
       "capabilities": {
         "schema": 1,
-        "presentation": "circuit_zk",
+        "presentation": "zkp_req",
         "credential": {
           "format": "mso_mdoc",
           "type": "eu.europa.ec.eudi.nym_auth.1"
         },
         "functions": [
           {
-            "id": "pseudonym-v1-sha256",
+            "id": "pseudonym",
             "max": 1,
             "always": true,
             "params": {
@@ -439,6 +443,14 @@
                 "enum": [
                   "known-offender-matching-ssc"
                 ]
+              },
+              "prf": {
+                "enum": [
+                  "sha-256"
+                ]
+              },
+              "ver": {
+                "type": "integer"
               }
             }
           },
@@ -478,6 +490,7 @@
     {
       "id": "nymauth-longfellow-sdjwt-v1",
       "system": "longfellow-nymauth",
+      "proofSystem": "longfellow-libzk-v1",
       "systemVersion": "61a8a73",
       "docTypes": [
         "urn:europa:attestation:nym_auth:1"
@@ -494,14 +507,14 @@
       },
       "capabilities": {
         "schema": 1,
-        "presentation": "circuit_zk",
+        "presentation": "zkp_req",
         "credential": {
           "format": "dc+sd-jwt",
           "type": "urn:europa:attestation:nym_auth:1"
         },
         "functions": [
           {
-            "id": "pseudonym-v1-sha256",
+            "id": "pseudonym",
             "max": 1,
             "always": true,
             "params": {
@@ -509,6 +522,14 @@
                 "enum": [
                   "known-offender-matching-ssc"
                 ]
+              },
+              "prf": {
+                "enum": [
+                  "sha-256"
+                ]
+              },
+              "ver": {
+                "type": "integer"
               }
             }
           },
@@ -547,7 +568,11 @@
     },
     {
       "id": "nymauth-vega-mdoc-v1",
+      "aliases": [
+        "urn:circuits:vega:nym_auth:v1"
+      ],
       "system": "vega-nymauth",
+      "proofSystem": "vega-v1",
       "systemVersion": "c0ee259",
       "docTypes": [
         "eu.europa.ec.eudi.nym_auth.1"
@@ -561,14 +586,14 @@
       },
       "capabilities": {
         "schema": 1,
-        "presentation": "circuit_zk",
+        "presentation": "zkp_req",
         "credential": {
           "format": "mso_mdoc",
           "type": "eu.europa.ec.eudi.nym_auth.1"
         },
         "functions": [
           {
-            "id": "pseudonym-v1-sha256",
+            "id": "pseudonym",
             "max": 1,
             "always": true,
             "params": {
@@ -576,6 +601,14 @@
                 "enum": [
                   "known-offender-matching-ssc"
                 ]
+              },
+              "prf": {
+                "enum": [
+                  "sha-256"
+                ]
+              },
+              "ver": {
+                "type": "integer"
               }
             }
           },
@@ -615,6 +648,7 @@
     {
       "id": "nymauth-vega-sdjwt-v1",
       "system": "vega-nymauth",
+      "proofSystem": "vega-v1",
       "systemVersion": "c0ee259",
       "docTypes": [
         "urn:europa:attestation:nym_auth:1"
@@ -628,14 +662,14 @@
       },
       "capabilities": {
         "schema": 1,
-        "presentation": "circuit_zk",
+        "presentation": "zkp_req",
         "credential": {
           "format": "dc+sd-jwt",
           "type": "urn:europa:attestation:nym_auth:1"
         },
         "functions": [
           {
-            "id": "pseudonym-v1-sha256",
+            "id": "pseudonym",
             "max": 1,
             "always": true,
             "params": {
@@ -643,6 +677,14 @@
                 "enum": [
                   "known-offender-matching-ssc"
                 ]
+              },
+              "prf": {
+                "enum": [
+                  "sha-256"
+                ]
+              },
+              "ver": {
+                "type": "integer"
               }
             }
           },

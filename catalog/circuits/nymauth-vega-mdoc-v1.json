@@ -1,6 +1,10 @@
 {
   "id": "nymauth-vega-mdoc-v1",
+  "aliases": [
+    "urn:circuits:vega:nym_auth:v1"
+  ],
   "system": "vega-nymauth",
+  "proofSystem": "vega-v1",
   "systemVersion": "c0ee259",
   "docTypes": [
     "eu.europa.ec.eudi.nym_auth.1"
@@ -14,14 +18,14 @@
   },
   "capabilities": {
     "schema": 1,
-    "presentation": "circuit_zk",
+    "presentation": "zkp_req",
     "credential": {
       "format": "mso_mdoc",
       "type": "eu.europa.ec.eudi.nym_auth.1"
     },
     "functions": [
       {
-        "id": "pseudonym-v1-sha256",
+        "id": "pseudonym",
         "max": 1,
         "always": true,
         "params": {
@@ -29,6 +33,14 @@
             "enum": [
               "known-offender-matching-ssc"
             ]
+          },
+          "prf": {
+            "enum": [
+              "sha-256"
+            ]
+          },
+          "ver": {
+            "type": "integer"
           }
         }
       },

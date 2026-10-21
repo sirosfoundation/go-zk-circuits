@@ -25,11 +25,13 @@ validated declaration.
 ```json
 "capabilities": {
   "schema": 1,
-  "presentation": "circuit_zk",
+  "presentation": "zkp_req",
   "credential": { "format": "mso_mdoc", "type": "eu.europa.ec.eudi.nym_auth.1", "issuance_profile": "nym_auth-spec-2.1" },
   "functions": [
-    { "id": "pseudonym-v1-sha256", "always": true,
-      "params": { "config": { "enum": ["known-offender-matching-ssc"] } } },
+    { "id": "pseudonym", "max": 1, "always": true,
+      "params": { "config": { "enum": ["known-offender-matching-ssc"] },
+                  "ver": { "type": "integer" },
+                  "prf": { "enum": ["sha-256"] } } },
     { "id": "age_check", "max": 1,
       "params": { "ge": { "type": "full-date" }, "le": { "type": "full-date" } } }
   ]
@@ -39,7 +41,7 @@ validated declaration.
 | Field | Rule |
 |---|---|
 | `schema` | Required, must be `1`. Independent of `manifestVersion`. |
-| `presentation` | Required, non-empty opaque string: the presentation format served (for example `circuit_zk`). |
+| `presentation` | Required, non-empty opaque string: the presentation format served (for example `zkp_req`). |
 | `credential.format`, `credential.type` | Required, non-empty opaque strings: the credential format and its type (mdoc doctype or SD-JWT VC `vct`). |
 | `credential.issuance_profile` | Optional, non-empty opaque string (an empty string is rejected): an issuance profile the credential must follow for the circuit to accept it; a constraint on the input credential, not an interop profile of the circuit. The key was named `profile` before; that name is now rejected as an unknown field. |
 | `functions` | Required, at least one. |
@@ -76,3 +78,25 @@ every entry's capabilities.
 nothing. Which circuits a wallet will actually use is still governed by its own
 pin table (spec §7.3). A wrong claim costs a failed proof, not a wrong
 acceptance.
+
+## Entry fields that go with capabilities (nym_auth rulebook v0.4)
+
+These are optional, additive entry fields (`manifestVersion` stays 1):
+
+- `proofSystem`: the proof-system identity a verifier lists in
+  `proof_system_values` (`longfellow-libzk-v1`, `vega-v1`). It is distinct from
+  `system`, which stays the client's adapter key (`longfellow-nymauth`,
+  `vega-nymauth`). A client that registers a circuit for `zkp_req` must read
+  `proofSystem` and must not fall back to `system`. Present in both the
+  manifest entry and `/v1/circuits/{id}.json`.
+- `aliases` may contain `:` so a URN can be an alias (for example
+  `urn:circuits:longfellow:nym_auth:v1`, the rulebook's example `system_id`).
+  The `id` charset is unchanged. The SD-JWT nym_auth entries carry no URN alias:
+  the rulebook v0.4 defines no SD-JWT binding.
+- The `pseudonym` function lists `config`, `ver` and `prf`, as the matcher
+  (siros-dc-matcher 0.11.0) requires. A constraint cannot be an integer enum, so
+  `ver` is `{"type": "integer"}`; the matcher refuses any `ver` other than 1
+  itself. The SD-JWT entries declare credential format `dc+sd-jwt`, so an
+  `mso_mdoc` request is never served by them.
+
+`circuitctl add --proof-system <v>` sets `proofSystem` on a new entry.

@@ -13,7 +13,8 @@ import (
 )
 
 // idPathPattern mirrors catalog's id charset (spec §2.3): a non-conforming id is a 400, not a 404.
-var idPathPattern = regexp.MustCompile(`^[A-Za-z0-9._-]{1,128}$`)
+// Aliases may also contain ":" (URN aliases), so the path pattern allows it.
+var idPathPattern = regexp.MustCompile(`^[A-Za-z0-9._:-]{1,128}$`)
 
 // CircuitHandler serves GET/HEAD /v1/circuits/{id}.json (spec §3.4).
 // An alias resolves via a 301 to the canonical path; a client MUST follow
